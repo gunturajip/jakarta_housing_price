@@ -2,7 +2,7 @@ name: Jakarta Housing Price
 
 on:
   schedule:
-    - cron: 55 20 * * *
+    - cron: 10 21 * * *
 
 jobs:
   build:
@@ -31,13 +31,13 @@ jobs:
         run: python 01_data_scraping.py
 
       - name: data cleaning
-        run: python data_cleaning.py
+        run: python 02_data_cleaning.py
 
       - name: data storing
-        run: python data_storing.py
+        run: python 03_data_storing.py
 
       - name: update README
-        run: python update_README.py
+        run: python 04_update_README.py
 
       - name: commit and push README
         run: |
