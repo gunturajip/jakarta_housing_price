@@ -13,7 +13,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
 
-with open("jakarta-housing-price-595a9cff2797.json") as file:
+with open("$HOME/jakarta-housing-price-595a9cff2797.json") as file:
     credential_file = json.load(file)
 
 target_table = "real_estate.jakarta"
