@@ -2,7 +2,7 @@ name: Jakarta Housing Price
 
 on:
   schedule:
-    - cron: 10 13 * * *
+    - cron: 57 13 * * *
 
 jobs:
   build:
@@ -18,7 +18,7 @@ jobs:
 
       - name: Decrypt files
         run: |
-          gpg --quiet --batch --yes --decrypt --passphrase="$PASSPHRASE" --output $HOME/jakarta-housing-price-595a9cff2797.json jakarta-housing-price-595a9cff2797.json.gpg
+          gpg --quiet --batch --yes --decrypt --passphrase="$PASSPHRASE" --output jakarta-housing-price-595a9cff2797.json jakarta-housing-price-595a9cff2797.json.gpg
         env:
           PASSPHRASE: ${{ secrets.PASSPHRASE }}
 

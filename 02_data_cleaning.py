@@ -16,7 +16,7 @@ from selenium.common.exceptions import NoSuchElementException
 with open("jakarta_coordinates.json", "r") as file:
     coordinates = json.loads(file.read())
 
-with open("$HOME/jakarta-housing-price-595a9cff2797.json") as file:
+with open("jakarta-housing-price-595a9cff2797.json") as file:
     credential_file = json.load(file)
 
 df = pd.read_csv("scraped_data.csv")
