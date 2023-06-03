@@ -2,7 +2,7 @@ name: Jakarta Housing Price
 
 on:
   schedule:
-    - cron: 00 09 * * *
+    - cron: 27 09 * * *
 
 jobs:
   build:
@@ -21,18 +21,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: set credentials as environment variable
-        env:
-          CREDENTIALS_JSON: ${{ secrets.BIGQUERY_CREDENTIALS }}
-        run: echo "$CREDENTIALS_JSON" >> $GITHUB_ENV
-
       - name: data scraping
+        env:
+          BIGQUERY_CREDENTIALS: ${{ secrets.BIGQUERY_CREDENTIALS }}
         run: python 01_data_scraping.py
 
       - name: data cleaning
+        env:
+          BIGQUERY_CREDENTIALS: ${{ secrets.BIGQUERY_CREDENTIALS }}
         run: python data_cleaning.py
 
       - name: data storing
+        env:
+          BIGQUERY_CREDENTIALS: ${{ secrets.BIGQUERY_CREDENTIALS }}
         run: python data_storing.py
 
       - name: update README
