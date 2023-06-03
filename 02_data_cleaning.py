@@ -16,14 +16,12 @@ from selenium.common.exceptions import NoSuchElementException
 with open("jakarta_coordinates.json", "r") as file:
     coordinates = json.loads(file.read())
 
-with open("jakarta-housing-price-595a9cff2797.json") as file:
-    credential_file = json.load(file)
-
 df = pd.read_csv("scraped_data.csv")
 
 target_table = "real_estate.jakarta"
 target_table_2 = "real_estate.most_recent"
 project_id = "jakarta-housing-price"
+credential_file = "jakarta-housing-price-595a9cff2797.json"
 credential = Credentials.from_service_account_file(credential_file)
 job_location = "asia-southeast2"
 
@@ -63,7 +61,6 @@ def convert_price(price):
     numeric *= multiplier
     return numeric
 
-
 df["Date"] = df["Date"].str.replace("Diperbarui sejak ", "").str.replace(",", "")
 df["Date"] = df["Date"].replace(month_mapping, regex=True)
 df["Date"] = pd.to_datetime(df["Date"])
@@ -80,12 +77,13 @@ df["Longitude"] = df["Location"].str.split(", ").str[-1].map(lambda x: coordinat
 df["Scraped Timestamp"] = pd.to_datetime(df["Scraped Timestamp"])
 
 df = df.drop("Price", axis=1)
-df = df.replace("N/A", np.nan)
 df = df[["Date", "Title", "Link", "Location", "Latitude", "Longitude", "Bedroom", "Bathroom", "Garage", "Land m2", "Building m2", "Price IDR", "Monthly Payment IDR", "Agent", "Scraped Timestamp"]]
 df.columns = df.columns.str.lower().str.replace(" ", "_")
 
 for col in ["latitude", "longitude", "bedroom", "bathroom", "garage", "land_m2", "building_m2", "price_idr", "monthly_payment_idr"]:
     df[col] = df[col].astype(float)
+
+df = df.drop_duplicates(subset=["date", "title", "link", "location"]).reset_index(drop=True)
 
 condition = (
     (df["title"] == query_most_recent["title"][0]) &
