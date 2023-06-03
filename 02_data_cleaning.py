@@ -16,12 +16,14 @@ from selenium.common.exceptions import NoSuchElementException
 with open("jakarta_coordinates.json", "r") as file:
     coordinates = json.loads(file.read())
 
+with open("jakarta-housing-price-595a9cff2797.json") as file:
+    credential_file = json.load(file)
+
 df = pd.read_csv("scraped_data.csv")
 
 target_table = "real_estate.jakarta"
 target_table_2 = "real_estate.most_recent"
 project_id = "jakarta-housing-price"
-credential_file = os.environ["BIGQUERY_CREDENTIALS"]
 credential = Credentials.from_service_account_file(credential_file)
 job_location = "asia-southeast2"
 

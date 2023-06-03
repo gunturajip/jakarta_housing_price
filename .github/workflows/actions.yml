@@ -2,7 +2,7 @@ name: Jakarta Housing Price
 
 on:
   schedule:
-    - cron: 42 09 * * *
+    - cron: 45 12 * * *
 
 jobs:
   build:
@@ -16,24 +16,24 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Decrypt files
+        run: |
+          gpg --quiet --batch --yes --decrypt --passphrase="$PASSPHRASE" --output $HOME/jakarta-housing-price-595a9cff2797.json jakarta-housing-price-595a9cff2797.json.gpg
+        env:
+          PASSPHRASE: ${{ secrets.PASSPHRASE }}
+
       - name: install requirements
         run:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: data scraping
-        env:
-          BIGQUERY_CREDENTIALS: ${{ secrets.BIGQUERY_CREDENTIALS }}
         run: python 01_data_scraping.py
 
       - name: data cleaning
-        env:
-          BIGQUERY_CREDENTIALS: ${{ secrets.BIGQUERY_CREDENTIALS }}
         run: python data_cleaning.py
 
       - name: data storing
-        env:
-          BIGQUERY_CREDENTIALS: ${{ secrets.BIGQUERY_CREDENTIALS }}
         run: python data_storing.py
 
       - name: update README
