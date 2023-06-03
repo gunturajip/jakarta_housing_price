@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "jakarta-housing-price",
+  "private_key_id": "595a9cff27977e38d06234cf8e3f236bc66ca962",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDa5E3807JylUyj\nRrs5qIHp5Vv0rB6ufqHaNrrgJfoRMmyMsO8LnJ2Lvq/iGXpSRHMRcwZX/PXb4rKK\nNxrVot0SZKilFXfWG+CTPixkUZte8V73OtrDsaJ2EqhzGjPcS7qVio9/ihrfS/oI\nN3avX4557VGTRmZAeaFKtPf4qwbNpuOV5Ps3jjdbDtt7N4psluFHS7NheD9MHSpX\nJlVfitkHMHifxH9GCCHGZx9EaJyem3mYjzBrUiTfl6TnMeYb6214YtKS9VFyg1nx\nfUvZzhh7f76XxTYO0x0QteUnsmoDgpu/pbzCxRqkQEhUfgUa97ASQ3h+bJHVaIGs\nNkdmkFLFAgMBAAECggEAILbDpmhH4IgfuWdLeVqNz/8ktx83lqymU+P0xKXoXG7v\nejdsrTeYSYJo7Em9K6kUlCRfa6xgB5+MlMuXicZFdAecjM+gkVypO62sb3HNiWsE\nM77quG9GmzmT+LU50FAhGqhoDzpSDygJE6FLw6TBuRyWzIQA/tyEFpOQBpdzn4MY\nS9FqpmgrQ0p1PxftjkL5bUrJgeDCsDOWnyW92fovOD/JYEZDKhzNuWzDOd5s8n9V\n6yo9AGn8gKy2GVuE3mZaho1wYFZoegtQOcN6CTsKcDJcyZXGxg4Ncy4Eocm9db+A\nGfbZ5xIvmZFWDVjbcfVXoMvFseisxIytBsKAkpfpIQKBgQDwxAIlff84PXxRIsEB\nElwDmrgRMf7ytWWmdvDroKlc5O4jzLOp68O2jWsyGAM9xFez0XlBxYjwIR9QrkSW\nk6QrawZPPB+13tPPHFvv2Dk55L/Eotpfyp5xFg39jbrbHaW1gL5oujBWfT+iQt+f\nIHaSbMGpeNdLoD1nagOuTAW5rwKBgQDovfo5QgXbeq21YNS3VKPonBZrAJPfw+0S\n5NWEhFVuRSJMLiuTwdbJ2Usw0OjIJE+uFbNgC9mYjSl2kGzVlKuHaaRmQ319CZXD\ntm+rjDeWb82Bw6TIBIPlcpW37ubH2riSx3gPKB33WhEJobZsYwfM2IG1bwI/GfLQ\ntRJqReF7ywKBgEiH09m1llA7/Zp3rMsE2+FeF7teY158lQ3L4RIqyTqp4K+6OBml\nY8U33yYtI7TU1FLgdPYCaxlj8QoeJZ1zBs7po/H0u9zPLuHCulOLwNmW9spnAQBA\nivCoYziSHMtrqAMAsNvd0zgK7UOVf8ZxQickSkcil0E6GaVww4Ebd9ITAoGAQwUx\n4PsaJLGXA/v2RTSiXoFUE0v/SRhqVF6A/b/9uds+nSFOeyX+a/GerVf7MGcEauTk\n2muPJVbA8dt0+6vsGPpa1PfqUu9HqSwHzCZ8e12GmC92bAKg2Jm+c1DgM/zP2bSG\n5hZvSqMs9NEUbvG1dU+DSnPE+dbHDUKXIvMskzECgYAwYXQpIItLvvqy5U2NSwvx\nEp06aeHOg2ktHFc5fmWKNoyx5BnWXciuBskE7kCEUGiG/3Ok3/q+rIpqe2RRCr8p\nomj/AEUhKl4fOj1dj9gZq7MqPyKBVhgxattIwWGfjucCaM2IeJRA23k3iiTm1w4J\nZpWgYI88Ib/a3sEyklBnOA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "jj-cloud-admin@jakarta-housing-price.iam.gserviceaccount.com",
+  "client_id": "113632276569276472842",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/jj-cloud-admin%40jakarta-housing-price.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

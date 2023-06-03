@@ -1,0 +1,46 @@
+name: Jakarta Housing Price
+
+on:
+  schedule:
+    - cron: 05 08 * * *
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check out the repository content
+        uses: actions/checkout@v2
+      
+      - name: set up python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: install requirements
+        run:
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: set credentials as environment variable
+        run: |
+          echo "::set-env name=CREDENTIALS_JSON::${{ secrets.BIGQUERY_CREDENTIALS }}
+
+      - name: data scraping
+        run: python 01_data_scraping.py
+
+      - name: data cleaning
+        run: python data_cleaning.py
+
+      - name: data storing
+        run: python data_storing.py
+
+      - name: update README
+        run: python update_README.py
+
+      - name: commit and push README
+        run: |
+          git config --global user.name "${{ secrets.USERNAME_GITHUB }}"
+          git config --global user.email "${{ secrets.EMAIL_GITHUB }}"
+          git add README.md
+          git commit -m "Updated README"
+          git push
