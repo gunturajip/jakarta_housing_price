@@ -21,15 +21,30 @@ credential = Credentials.from_service_account_file(credential_file)
 job_location = "asia-southeast2"
 
 df = pd.read_csv("cleaned_data.csv")
-most_recent = pd.read_csv("most_recent_data.csv")
+df["date"] = pd.to_datetime(df["date"])
 
-numeric_columns = ["bedroom", "bathroom", "garage", "land_m2", "building_m2", "price_idr", "monthly_payment_idr"]
-df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric)
-most_recent[numeric_columns] = most_recent[numeric_columns].apply(pd.to_numeric)
+most_recent = pd.read_csv("most_recent_data.csv")
+most_recent["date"] = pd.to_datetime(most_recent["date"])
+
+schema = [
+    {"name": "date", "type": "DATE"},
+    {"name": "title", "type": "STRING"},
+    {"name": "link", "type": "STRING"},
+    {"name": "location", "type": "STRING"},
+    {"name": "latitude", "type": "FLOAT64"},
+    {"name": "longitude", "type": "FLOAT64"},
+    {"name": "bedroom", "type": "FLOAT64"},
+    {"name": "bathroom", "type": "FLOAT64"},
+    {"name": "garage", "type": "FLOAT64"},
+    {"name": "land_m2", "type": "FLOAT64"},
+    {"name": "building_m2", "type": "FLOAT64"},
+    {"name": "price_idr", "type": "FLOAT64"},
+    {"name": "monthly_payment_idr", "type": "FLOAT64"},
+    {"name": "agent", "type": "STRING"}
+]
 
 df_without_timestamp = df.copy()
 df_without_timestamp = df_without_timestamp.drop("scraped_timestamp", axis=1)
-
 df_without_timestamp.to_gbq(
     destination_table=target_table,
     project_id=project_id,
@@ -37,17 +52,18 @@ df_without_timestamp.to_gbq(
     location=job_location,
     chunksize=10_000,
     progress_bar=True,
-    credentials=credential
+    credentials=credential,
+    table_schema=schema
 )
 
 most_recent_without_timestamp = most_recent.copy()
 most_recent_without_timestamp = most_recent_without_timestamp.drop("scraped_timestamp", axis=1)
-
 most_recent_without_timestamp.to_gbq(
     destination_table=target_table_2,
     project_id=project_id,
     if_exists="replace",
     location=job_location,
     progress_bar=True,
-    credentials=credential
+    credentials=credential,
+    table_schema=schema
 )
