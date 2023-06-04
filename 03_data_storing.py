@@ -23,6 +23,10 @@ job_location = "asia-southeast2"
 df = pd.read_csv("cleaned_data.csv")
 most_recent = pd.read_csv("most_recent_data.csv")
 
+numeric_columns = ["bedroom", "bathroom", "garage", "land_m2", "building_m2", "price_idr", "monthly_payment_idr"]
+df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric)
+most_recent[numeric_columns] = most_recent[numeric_columns].apply(pd.to_numeric)
+
 schema = [
     {"name": "date", "type": "DATE"},
     {"name": "title", "type": "STRING"},
