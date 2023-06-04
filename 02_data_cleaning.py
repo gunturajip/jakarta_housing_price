@@ -83,7 +83,7 @@ df.columns = df.columns.str.lower().str.replace(" ", "_")
 for col in ["latitude", "longitude", "bedroom", "bathroom", "garage", "land_m2", "building_m2", "price_idr", "monthly_payment_idr"]:
     df[col] = df[col].astype(float)
 
-df = df.drop_duplicates(subset=["date", "title", "link", "location"]).reset_index(drop=True)
+df = df.drop_duplicates(subset=["title", "location", "bedroom", "bathroom", "garage", "land_m2", "building_m2"]).reset_index(drop=True)
 
 condition = (
     (df["title"] == query_most_recent["title"][0]) &
