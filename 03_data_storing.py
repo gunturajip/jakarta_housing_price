@@ -27,23 +27,6 @@ numeric_columns = ["bedroom", "bathroom", "garage", "land_m2", "building_m2", "p
 df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric)
 most_recent[numeric_columns] = most_recent[numeric_columns].apply(pd.to_numeric)
 
-schema = [
-    {"name": "date", "type": "DATE"},
-    {"name": "title", "type": "STRING"},
-    {"name": "link", "type": "STRING"},
-    {"name": "location", "type": "STRING"},
-    {"name": "latitude", "type": "FLOAT64"},
-    {"name": "longitude", "type": "FLOAT64"},
-    {"name": "bedroom", "type": "FLOAT64"},
-    {"name": "bathroom", "type": "FLOAT64"},
-    {"name": "garage", "type": "FLOAT64"},
-    {"name": "land_m2", "type": "FLOAT64"},
-    {"name": "building_m2", "type": "FLOAT64"},
-    {"name": "price_idr", "type": "FLOAT64"},
-    {"name": "monthly_payment_idr", "type": "FLOAT64"},
-    {"name": "agent", "type": "STRING"}
-]
-
 df_without_timestamp = df.copy()
 df_without_timestamp = df_without_timestamp.drop("scraped_timestamp", axis=1)
 
@@ -54,8 +37,7 @@ df_without_timestamp.to_gbq(
     location=job_location,
     chunksize=10_000,
     progress_bar=True,
-    credentials=credential,
-    table_schema=schema
+    credentials=credential
 )
 
 most_recent_without_timestamp = most_recent.copy()
@@ -67,6 +49,5 @@ most_recent_without_timestamp.to_gbq(
     if_exists="replace",
     location=job_location,
     progress_bar=True,
-    credentials=credential,
-    table_schema=schema
+    credentials=credential
 )
