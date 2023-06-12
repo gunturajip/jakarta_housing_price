@@ -118,10 +118,10 @@ df["Monthly Payment IDR"] = df["Monthly Payment IDR"].apply(convert_price)
 df["Scraped Timestamp"] = pd.to_datetime(df["Scraped Timestamp"])
 
 df = df.drop("Price", axis=1)
-df = df[["Date", "Title", "Link", "Location", "Latitude", "Longitude", "Bedroom", "Bathroom", "Garage", "Land m2", "Building m2", "Price IDR", "Monthly Payment IDR", "Agent", "Scraped Timestamp"]]
+df = df[["Date", "Title", "Link", "Location", "Bedroom", "Bathroom", "Garage", "Land m2", "Building m2", "Price IDR", "Monthly Payment IDR", "Agent", "Scraped Timestamp"]]
 df.columns = df.columns.str.lower().str.replace(" ", "_")
 
-for col in ["latitude", "longitude", "bedroom", "bathroom", "garage", "land_m2", "building_m2", "price_idr", "monthly_payment_idr"]:
+for col in ["bedroom", "bathroom", "garage", "land_m2", "building_m2", "price_idr", "monthly_payment_idr"]:
     df[col] = df[col].astype(float)
 
 df = df.drop_duplicates(subset=["title", "location", "bedroom", "bathroom", "garage", "land_m2", "building_m2"]).reset_index(drop=True)
