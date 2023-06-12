@@ -4,3 +4,4 @@ pandas-gbq==0.19.2
 requests==2.31.0
 selenium==4.9.1
 google-auth==2.19.0
+geopy==2.3.0

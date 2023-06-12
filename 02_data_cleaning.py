@@ -4,17 +4,16 @@ import requests
 import urllib.parse
 import json
 import os
+import re
 
 from datetime import datetime
 from google.oauth2.service_account import Credentials
+from geopy.geocoders import Nominatim
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
-
-with open("jakarta_coordinates.json", "r") as file:
-    coordinates = json.loads(file.read())
 
 df = pd.read_csv("scraped_data.csv")
 
@@ -61,6 +60,51 @@ def convert_price(price):
     numeric *= multiplier
     return numeric
 
+geolocator = Nominatim(user_agent="my_user_agent")
+
+def get_district(text):
+    match = re.search(r"Bintaro.*", text)
+    if match:
+        text = match.group(0)
+
+    if "Kav" in text:
+        text = text.replace("Kav", "Kavling")
+
+    cities = ["Jakarta Utara", "Jakarta Timur", "Jakarta Selatan", "Jakarta Barat", "Jakarta Pusat"]
+
+    try:
+        location = geolocator.geocode(text)
+        if location is not None:
+            address = location.raw["display_name"]
+            for city in cities:
+                if city in address:
+                    district = address.split(city)[0].strip()
+                    district = district.split(",")
+                    district = district[-2].strip()
+                    break
+            result = f"{district}, {city}"
+        else:
+            result = np.nan
+    except:
+        result = np.nan
+
+    return result
+
+def get_latitude_longitude(text):
+    if text is not None and not pd.isnull(text):
+        location = geolocator.geocode(text)
+        if location is not None:
+            address = location.raw
+            latitude = address["lat"]
+            longitude = address["lon"]
+            latitude_longitude = f"{latitude}, {longitude}"
+        else:
+            latitude_longitude = np.nan
+    else:
+        latitude_longitude = np.nan
+
+    return latitude_longitude
+
 df["Date"] = df["Date"].str.replace("Diperbarui sejak ", "").str.replace(",", "")
 df["Date"] = df["Date"].replace(month_mapping, regex=True)
 df["Date"] = pd.to_datetime(df["Date"])
@@ -70,9 +114,6 @@ df["Price IDR"] = df["Price IDR"].apply(convert_price)
 
 df["Monthly Payment IDR"] = df["Price"].str.split("\n").str[1].str.replace("Cicilan : ", "").str.replace(" per bulan", "")
 df["Monthly Payment IDR"] = df["Monthly Payment IDR"].apply(convert_price)
-
-df["Latitude"] = df["Location"].str.split(", ").str[-1].map(lambda x: coordinates.get(x, {}).get("latitude"))
-df["Longitude"] = df["Location"].str.split(", ").str[-1].map(lambda x: coordinates.get(x, {}).get("longitude"))
 
 df["Scraped Timestamp"] = pd.to_datetime(df["Scraped Timestamp"])
 
@@ -88,13 +129,22 @@ df = df.drop_duplicates(subset=["title", "location", "bedroom", "bathroom", "gar
 condition = (
     (df["title"] == query_most_recent["title"][0]) &
     (df["link"] == query_most_recent["link"][0]) &
-    (df["location"] == query_most_recent["location"][0]) &
+    (df["location"] == query_most_recent["address"][0]) &
     (df["agent"] == query_most_recent["agent"][0])
 )
 
 df = df[~condition]
 
-df.to_csv("cleaned_data.csv", index=False)
+unique_locations = pd.DataFrame({"location": df["location"].unique()})
+unique_locations["district"] = unique_locations["location"].apply(get_district)
+unique_locations["latitude_longitude"] = unique_locations["district"].apply(get_latitude_longitude)
 
-most_recent = df[df["scraped_timestamp"] == df["scraped_timestamp"].min()]
+merged_df = df.merge(unique_locations, on="location", how="left")
+merged_df_without_null = merged_df.dropna(subset=["district"]).reset_index(drop=True)
+merged_df_without_null = merged_df_without_null.rename(columns={"location": "address"})
+merged_df_without_null = merged_df_without_null[["date", "title", "link", "address", "district", "latitude_longitude", "bedroom", "bathroom", "garage", "land_m2", "building_m2", "price_idr", "monthly_payment_idr", "agent", "scraped_timestamp"]]
+
+merged_df_without_null.to_csv("cleaned_data.csv", index=False)
+
+most_recent = merged_df_without_null[merged_df_without_null["scraped_timestamp"] == merged_df_without_null["scraped_timestamp"].min()]
 most_recent.to_csv("most_recent_data.csv", index=False)

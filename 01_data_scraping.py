@@ -4,9 +4,11 @@ import requests
 import urllib.parse
 import json
 import os
+import re
 
 from datetime import datetime
 from google.oauth2.service_account import Credentials
+from geopy.geocoders import Nominatim
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -188,7 +190,7 @@ for page in range(1, 101):
 
             # Check If Conditions Are Met
             if title == query_most_recent["title"][0] and link == query_most_recent["link"][0] and \
-                    location == query_most_recent["location"][0] and agent == query_most_recent["agent"][0]:
+                    location == query_most_recent["address"][0] and agent == query_most_recent["agent"][0]:
                 print("CONDITIONS ARE MET")
                 conditions_met = True
                 break

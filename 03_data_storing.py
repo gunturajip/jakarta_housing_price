@@ -4,9 +4,11 @@ import requests
 import urllib.parse
 import json
 import os
+import re
 
 from datetime import datetime
 from google.oauth2.service_account import Credentials
+from geopy.geocoders import Nominatim
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -30,9 +32,9 @@ schema = [
     {"name": "date", "type": "DATE"},
     {"name": "title", "type": "STRING"},
     {"name": "link", "type": "STRING"},
-    {"name": "location", "type": "STRING"},
-    {"name": "latitude", "type": "FLOAT64"},
-    {"name": "longitude", "type": "FLOAT64"},
+    {"name": "address", "type": "STRING"},
+    {"name": "district", "type": "STRING"},
+    {"name": "latitude_longitude", "type": "STRING"},
     {"name": "bedroom", "type": "FLOAT64"},
     {"name": "bathroom", "type": "FLOAT64"},
     {"name": "garage", "type": "FLOAT64"},
