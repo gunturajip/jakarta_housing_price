@@ -34,6 +34,7 @@ schema = [
     {"name": "link", "type": "STRING"},
     {"name": "address", "type": "STRING"},
     {"name": "district", "type": "STRING"},
+    {"name": "kemendagri_code", "type": "STRING"},
     {"name": "latitude_longitude", "type": "STRING"},
     {"name": "bedroom", "type": "FLOAT64"},
     {"name": "bathroom", "type": "FLOAT64"},
