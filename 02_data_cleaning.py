@@ -120,6 +120,7 @@ condition = (
 )
 
 df = df[~condition]
+df = df.rename(columns={"location": "address"})
 
 jkt_districts = pd.read_excel("jakarta_districts.xlsx")
 
