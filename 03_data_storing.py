@@ -70,3 +70,24 @@ most_recent_without_timestamp.to_gbq(
     credentials=credential,
     table_schema=schema
 )
+
+df_original = pd.read_gbq(f"SELECT * FROM `{project_id}.{target_table}`", project_id=project_id, credentials=credential)
+df_original["date"] = df_original["date"].dt.tz_localize(None)
+
+print(f"Number of rows before removing duplicates\t: {len(df_original)}")
+
+df_original = df_original.drop_duplicates(subset=df_original.columns[:-1]).reset_index(drop=True)
+
+df_original.to_gbq(
+    destination_table=target_table,
+    project_id=project_id,
+    if_exists="append",
+    location=job_location,
+    chunksize=10_000,
+    progress_bar=True,
+    credentials=credential,
+    table_schema=schema
+)
+
+print(f"Number of rows after removing duplicates\t: {len(df_original)}")
+print(f"Number of duplicate rows\t\t\t: {len(df_original[df_original.duplicated()])}")
