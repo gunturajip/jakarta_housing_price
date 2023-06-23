@@ -81,7 +81,7 @@ df_original = df_original.drop_duplicates(subset=df_original.columns[:-1]).reset
 df_original.to_gbq(
     destination_table=target_table,
     project_id=project_id,
-    if_exists="append",
+    if_exists="replace",
     location=job_location,
     chunksize=10_000,
     progress_bar=True,
