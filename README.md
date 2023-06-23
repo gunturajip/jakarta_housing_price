@@ -3,12 +3,12 @@
 # 🏠 Jakarta Housing Prices
 
 <p align="center">
-    <img src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" alt="Python Badge">
-    <img src="https://img.shields.io/static/v1?style=for-the-badge&message=Jupyter+Notebook&color=F37626&logo=Jupyter&logoColor=FFFFFF&label=" alt="Jupyter Notebook Badge">
-    <img src="https://img.shields.io/badge/Google%20BigQuery-%234A90E2.svg?style=for-the-badge&logo=googlecloud&logoColor=white" alt="Google BigQuery Badge">
-    <img src="https://img.shields.io/static/v1?style=for-the-badge&message=Looker+Studio&color=4285F4&logo=Looker&logoColor=FFFFFF&label=" alt="Looker Studio Badge">
-    <img src="https://img.shields.io/static/v1?style=for-the-badge&message=Google+Sheets&color=34A853&logo=Google+Sheets&logoColor=FFFFFF&label=" alt="Google Sheets Badge">
-    <img src="https://img.shields.io/static/v1?style=for-the-badge&message=GitHub+Actions&color=2088FF&logo=GitHub+Actions&logoColor=FFFFFF&label=" alt="GitHub Actions Badge">
+    <img src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" alt="Python Badge" height="23">
+    <img src="https://img.shields.io/static/v1?style=for-the-badge&message=Jupyter+Notebook&color=F37626&logo=Jupyter&logoColor=FFFFFF&label=" alt="Jupyter Notebook Badge" height="23">
+    <img src="https://img.shields.io/badge/Google%20BigQuery-%234A90E2.svg?style=for-the-badge&logo=googlecloud&logoColor=white" alt="Google BigQuery Badge" height="23">
+    <img src="https://img.shields.io/static/v1?style=for-the-badge&message=Looker+Studio&color=4285F4&logo=Looker&logoColor=FFFFFF&label=" alt="Looker Studio Badge" height="23">
+    <img src="https://img.shields.io/static/v1?style=for-the-badge&message=Google+Sheets&color=34A853&logo=Google+Sheets&logoColor=FFFFFF&label=" alt="Google Sheets Badge" height="23">
+    <img src="https://img.shields.io/static/v1?style=for-the-badge&message=GitHub+Actions&color=2088FF&logo=GitHub+Actions&logoColor=FFFFFF&label=" alt="GitHub Actions Badge" height="23">
 </p>
 
 <p align="center">
