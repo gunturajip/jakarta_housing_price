@@ -72,7 +72,7 @@ with open("README.md", "w", encoding="utf-8") as f:
     f.write(readme)
 
 with open("README.md", "a", encoding="utf-8") as file:
-    file.write(f"Data last updated: {str(datetime.now() + + timedelta(hours=7))}\n")
+    file.write(f"Data last updated: {str(datetime.now() + timedelta(hours=7))}\n")
 
 with open("README.md", "a", encoding="utf-8") as file:
     file.write('\n<p align="right">(<a href="#readme-top">back to top</a>)</p>')
