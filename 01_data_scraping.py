@@ -5,6 +5,7 @@ import urllib.parse
 import json
 import os
 import re
+import chromedriver_autoinstaller
 
 from datetime import datetime, timedelta
 from google.oauth2.service_account import Credentials
@@ -27,15 +28,16 @@ query_most_recent["date"] = pd.to_datetime(query_most_recent["date"])
 
 # Browser Settings
 website = "https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page=1#qid~a46c0629-67e4-410c-9c35-0c80e98987d9"
-path = "chromedriver.exe"
+# path = "chromedriver.exe"
+# service = Service(path)
 
-service = Service(path)
+chromedriver_autoinstaller.install()
 
 options = Options()
 options.add_argument("--headless")
 options.add_argument("window-size=1920x1080")
 
-driver = webdriver.Chrome(service=service, options=options)
+driver = webdriver.Chrome(options=options)
 
 # Lists to Store the Scraped Data
 titles = []
