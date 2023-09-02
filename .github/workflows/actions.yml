@@ -2,7 +2,8 @@ name: Jakarta Housing Price
 
 on:
   schedule:
-    - cron: 30 0,12 * * *
+    # - cron: 30 0,12 * * *
+    - cron: 30 9 * * *
 
 jobs:
   build:

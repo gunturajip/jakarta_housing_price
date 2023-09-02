@@ -6,7 +6,7 @@ import json
 import os
 import re
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from google.oauth2.service_account import Credentials
 from geopy.geocoders import Nominatim
 
@@ -23,7 +23,7 @@ credential = Credentials.from_service_account_file(credential_file)
 job_location = "asia-southeast2"
 
 query_most_recent = pd.read_gbq(f"SELECT * FROM `{project_id}.{target_table_2}`", project_id=project_id, credentials=credential)
-query_most_recent["date"] = query_most_recent["date"].dt.tz_localize(None)
+query_most_recent["date"] = pd.to_datetime(query_most_recent["date"])
 
 # Browser Settings
 website = "https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page=1#qid~a46c0629-67e4-410c-9c35-0c80e98987d9"
@@ -49,7 +49,6 @@ land_areas = []
 building_areas = []
 agents = []
 dates = []
-scraped_timestamps = []
 
 # Iterate through Each Page
 conditions_met = False
@@ -67,9 +66,6 @@ for page in range(1, 101):
     index = 0
     for element in property_elements:
         try:
-            # Scraped Timestamp
-            current_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
             # Title
             try:
                 title_element = element.find_element("xpath", ".//a[@title and h2]")
@@ -150,9 +146,6 @@ for page in range(1, 101):
             # Store the Scraped Data in the Lists
             print(f"House {index + 1} (Page {page}):")
 
-            scraped_timestamps.append(current_timestamp)
-            print(f"Scraped Timestamp: {current_timestamp}")
-
             titles.append(title)
             print(f"Title: {title}")
 
@@ -180,17 +173,38 @@ for page in range(1, 101):
             building_areas.append(building_area)
             print(f"Building Area: {building_area}")
 
-            agents.append(agent)
-            print(f"Agent: {agent}")
+            agents.append(date)
+            print(f"Agent: {date}")
 
-            dates.append(date)
-            print(f"Date: {date}")
+            def subtract_time_from_now(time_string):
+                time_parts = time_string.split()
+
+                number = int(time_parts[1])
+                unit = time_parts[2]
+
+                now = datetime.now() + timedelta(hours=7)
+                # now = datetime.now()
+
+                if unit.lower() == "detik":
+                    return now - timedelta(seconds=number)
+                elif unit.lower() == "menit":
+                    return now - timedelta(minutes=number)
+                elif unit.lower() == "jam":
+                    return now - timedelta(hours=number)
+                elif unit.lower() == "hari":
+                    return now - timedelta(days=number)
+                else:
+                    raise ValueError("Unknown time unit!")
+                
+            agent = subtract_time_from_now(agent)
+            dates.append(agent)
+            print(f"Date: {agent}")
 
             print("--------------------")
 
             # Check If Conditions Are Met
             if title == query_most_recent["title"][0] and link == query_most_recent["link"][0] and \
-                    location == query_most_recent["address"][0] and agent == query_most_recent["agent"][0]:
+                    location == query_most_recent["address"][0] and date == query_most_recent["agent"][0]:
                 print("CONDITIONS ARE MET")
                 conditions_met = True
                 break
@@ -208,7 +222,7 @@ driver.quit()
 df = pd.DataFrame({
     "Title": titles,
     "Link": links,
-    "Location": locations,
+    "Address": locations,
     "Bedroom": bedrooms,
     "Bathroom": bathrooms,
     "Garage": garages,
@@ -216,8 +230,7 @@ df = pd.DataFrame({
     "Building m2": building_areas,
     "Price": prices,
     "Agent": agents,
-    "Date": dates,
-    "Scraped Timestamp": scraped_timestamps
+    "Date": dates
 })
 
 df.to_csv("scraped_data.csv", index=False)

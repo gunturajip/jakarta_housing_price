@@ -29,7 +29,7 @@ most_recent = pd.read_csv("most_recent_data.csv")
 most_recent["date"] = pd.to_datetime(most_recent["date"])
 
 schema = [
-    {"name": "date", "type": "DATE"},
+    {"name": "date", "type": "DATETIME"},
     {"name": "title", "type": "STRING"},
     {"name": "link", "type": "STRING"},
     {"name": "address", "type": "STRING"},
@@ -46,9 +46,7 @@ schema = [
     {"name": "agent", "type": "STRING"}
 ]
 
-df_without_timestamp = df.copy()
-df_without_timestamp = df_without_timestamp.drop("scraped_timestamp", axis=1)
-df_without_timestamp.to_gbq(
+df.to_gbq(
     destination_table=target_table,
     project_id=project_id,
     if_exists="append",
@@ -59,9 +57,7 @@ df_without_timestamp.to_gbq(
     table_schema=schema
 )
 
-most_recent_without_timestamp = most_recent.copy()
-most_recent_without_timestamp = most_recent_without_timestamp.drop("scraped_timestamp", axis=1)
-most_recent_without_timestamp.to_gbq(
+most_recent.to_gbq(
     destination_table=target_table_2,
     project_id=project_id,
     if_exists="replace",
@@ -72,11 +68,11 @@ most_recent_without_timestamp.to_gbq(
 )
 
 df_original = pd.read_gbq(f"SELECT * FROM `{project_id}.{target_table}`", project_id=project_id, credentials=credential)
-df_original["date"] = df_original["date"].dt.tz_localize(None)
+df_original["date"] = pd.to_datetime(df_original["date"])
 
 print(f"Number of rows before removing duplicates\t: {len(df_original)}")
 
-df_original = df_original.drop_duplicates(subset=df_original.columns[:-1]).reset_index(drop=True)
+df_original = df_original.drop_duplicates(subset=df_original.columns[1:-1]).reset_index(drop=True)
 
 df_original.to_gbq(
     destination_table=target_table,
