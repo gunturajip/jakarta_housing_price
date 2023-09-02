@@ -64,6 +64,10 @@ For a detailed analysis and access to the interactive dashboard and spreadsheet,
 
 Feel free to explore the data, analyze trends, and make use of the valuable insights provided by this project.
 
+<<<<<<< HEAD
 Data last updated: 2023-09-02 23:21:59.177374
+=======
+Data last updated: 2023-06-28 09:24:41.722486
+>>>>>>> 3573ed2dc018f5286ce8f652a93c85543345e716
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
