@@ -1,11 +1,14 @@
+import streamlit as st
 import numpy as np
 import pandas as pd
 import altair as alt
-import streamlit as st
+import os
+import tempfile
 
 from datetime import datetime, timedelta
 from google.oauth2.service_account import Credentials
 from google.cloud import bigquery
+from cryptography.fernet import Fernet
 
 st.set_page_config(
     page_title="Jakarta Housing Prices Dashboard",
@@ -64,6 +67,17 @@ with st.sidebar:
         <a href='https://www.instagram.com/darren_matthew_/'><i class='fab fa-instagram' style='font-size: 30px; color: #fafafa;'></i></a>
     """, unsafe_allow_html=True)
 
+key = os.environ.get("FERNET_KEY")
+cipher_suite = Fernet(key)
+
+with open("encryption/encrypted_data.bin", "rb") as file:
+    encrypted_data = file.read()
+    decrypted_data = cipher_suite.decrypt(encrypted_data).decode()
+
+with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+    temp_file.write(decrypted_data.encode())
+    temp_file_path = temp_file.name
+
 target_table = "real_estate.jakarta"
 project_id = "jakarta-housing-price"
 job_location = "asia-southeast2"
@@ -81,6 +95,10 @@ def fetch_data(start_date, end_date):
         WHERE date BETWEEN '{start_date}' AND '{end_date}'
     """
     return fetch_data_from_bigquery(sql_query)
+
+credential = Credentials.from_service_account_file(temp_file_path)
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = temp_file_path
+os.remove(temp_file_path)
 
 start_date, end_date = date_filter
 previous_start_date = start_date - (end_date - start_date)
