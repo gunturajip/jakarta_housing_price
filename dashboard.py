@@ -311,6 +311,16 @@ with col1:
 with col2:
     st.markdown(f"<h4 style='text-align: center;'>Average & Median House Prices by City</h4>", unsafe_allow_html=True)
 
+    legend_css = """
+    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 1rem;">
+        <div style="background-color: #83c9ff; width: 12px; height: 12px; margin-right: 0.5rem;"></div>
+        <div style="font-size: 14px; color: #fafafa; margin-right: 2rem;">Average</div>
+        <div style="background-color: #0068c9; width: 12px; height: 12px; margin-right: 0.5rem;"></div>
+        <div style="font-size: 14px; color: #fafafa;">Median</div>
+    </div>
+    """
+    st.markdown(legend_css, unsafe_allow_html=True)
+
     agg_price_city_df = df.groupby("city").agg(
         average = ("price_idr", np.mean),
         median = ("price_idr", np.median)
@@ -343,7 +353,7 @@ with col2:
                 labelExpr=label_expr_price
             )
         ),
-        color=alt.Color("measure", legend=alt.Legend(title="", labelFontSize=14, columns=2, orient="top")),
+        color=alt.Color("measure", legend=None),
         tooltip=[alt.Tooltip("city", title="City"), alt.Tooltip("formatted_price:N", title="Price")]
     ).configure_view(
         stroke=None
