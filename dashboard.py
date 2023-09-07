@@ -62,7 +62,7 @@ with st.sidebar:
 
     st.markdown(font_awesome + """
         <br>
-        <p>Made by <b>Mathew Darren</b></p>
+        <p>Made by <b>Mathew Darren Kusuma</b></p>
         <a href='https://github.com/darren7753'><i class='fab fa-github' style='font-size: 30px; color: #fafafa;'></i></a>&nbsp;
         <a href='https://www.linkedin.com/in/mathewdarren/'><i class='fab fa-linkedin' style='font-size: 30px; color: #fafafa;'></i></a>&nbsp;
         <a href='https://www.instagram.com/darren_matthew_/'><i class='fab fa-instagram' style='font-size: 30px; color: #fafafa;'></i></a>
