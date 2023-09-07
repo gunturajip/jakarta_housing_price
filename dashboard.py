@@ -67,8 +67,7 @@ with st.sidebar:
         <a href='https://www.instagram.com/darren_matthew_/'><i class='fab fa-instagram' style='font-size: 30px; color: #fafafa;'></i></a>
     """, unsafe_allow_html=True)
 
-# key = os.environ.get("FERNET_KEY")
-key = "h-INEUme8iXdiFhEK2R6LaZ6ryBwVrkQ0JHbYwKOEsg="
+key = os.environ.get("FERNET_KEY")
 cipher_suite = Fernet(key)
 
 with open("encryption/encrypted_data.bin", "rb") as file:
