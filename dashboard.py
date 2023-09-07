@@ -74,9 +74,13 @@ with open("encryption/encrypted_data.bin", "rb") as file:
     encrypted_data = file.read()
     decrypted_data = cipher_suite.decrypt(encrypted_data).decode()
 
-with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+with tempfile.NamedTemporaryFile(delete=False, suffix=".json") as temp_file:
     temp_file.write(decrypted_data.encode())
     temp_file_path = temp_file.name
+
+credentials = bigquery.Credentials.from_service_account_file(temp_file_path)
+client = bigquery.Client(credentials=credentials)
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = temp_file_path
 
 target_table = "real_estate.jakarta"
 project_id = "jakarta-housing-price"
@@ -96,8 +100,6 @@ def fetch_data(start_date, end_date):
     """
     return fetch_data_from_bigquery(sql_query)
 
-credential = Credentials.from_service_account_file(temp_file_path)
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = temp_file_path
 os.remove(temp_file_path)
 
 start_date, end_date = date_filter
