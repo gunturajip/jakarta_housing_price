@@ -67,11 +67,12 @@ with st.sidebar:
         <a href='https://www.instagram.com/darren_matthew_/'><i class='fab fa-instagram' style='font-size: 30px; color: #fafafa;'></i></a>
     """, unsafe_allow_html=True)
 
-key = os.environ.get("FERNET_KEY")
+# key = os.environ.get("FERNET_KEY")
+key = "h-INEUme8iXdiFhEK2R6LaZ6ryBwVrkQ0JHbYwKOEsg="
 cipher_suite = Fernet(key)
 
 with open("encryption/encrypted_data.bin", "rb") as file:
-    encrypted_data = file.read()
+    encrypted_data = file.read()    
     decrypted_data = cipher_suite.decrypt(encrypted_data).decode()
 
 with tempfile.NamedTemporaryFile(delete=False, suffix=".json") as temp_file:
@@ -83,12 +84,11 @@ project_id = "jakarta-housing-price"
 job_location = "asia-southeast2"
 
 credentials = Credentials.from_service_account_file(temp_file_path)
-client = bigquery.Client(credentials=credentials, project=project_id)
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = temp_file_path
 
 def fetch_data_from_bigquery(query):
     """Fetch data using BigQuery."""
-    client = bigquery.Client()
+    client = bigquery.Client(credentials=credentials, project=project_id)
     return client.query(query).to_dataframe()
 
 @st.cache_data
@@ -343,7 +343,7 @@ with col2:
                 labelExpr=label_expr_price
             )
         ),
-        color=alt.Color("measure", legend=alt.Legend(title="", labelFontSize=14, columns=1, orient="right")),
+        color=alt.Color("measure", legend=alt.Legend(title="", labelFontSize=14, columns=2, orient="top")),
         tooltip=[alt.Tooltip("city", title="City"), alt.Tooltip("formatted_price:N", title="Price")]
     ).configure_view(
         stroke=None
