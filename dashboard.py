@@ -12,7 +12,8 @@ from cryptography.fernet import Fernet
 
 st.set_page_config(
     page_title="Jakarta Housing Prices Dashboard",
-    layout="wide"
+    layout="wide",
+    page_icon="https://raw.githubusercontent.com/darren7753/jakarta_housing_price/main/icons/monas.png"
 )
 
 reduce_header_height_style = """
