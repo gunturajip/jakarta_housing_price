@@ -14,7 +14,7 @@ readme = """<a name="readme-top"></a>
 </p>
 
 <p align="center">
-    <img src="images/screenshot_dashboard.png" alt="Screenshot of the Dashboard" width="100%" style="border-radius: 10px;">
+    <img src="images/screenshot_dashboard.png" alt="Screenshot of the Dashboard" width="100%">
     <br>
     <em>Screenshot of the Dashboard</em>
 </p>
