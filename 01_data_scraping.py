@@ -5,16 +5,17 @@ import urllib.parse
 import json
 import os
 import re
-import chromedriver_autoinstaller
+# import chromedriver_autoinstaller
 
 from datetime import datetime, timedelta
 from google.oauth2.service_account import Credentials
 from geopy.geocoders import Nominatim
 
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
+from webdriver_manager.chrome import ChromeDriverManager
 
 target_table = "real_estate.jakarta"
 target_table_2 = "real_estate.most_recent"
@@ -30,14 +31,15 @@ query_most_recent["date"] = pd.to_datetime(query_most_recent["date"])
 website = "https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page=1#qid~a46c0629-67e4-410c-9c35-0c80e98987d9"
 # path = "chromedriver.exe"
 # service = Service(path)
+# chromedriver_autoinstaller.install()
 
-chromedriver_autoinstaller.install()
+
 
 options = Options()
 options.add_argument("--headless")
 options.add_argument("window-size=1920x1080")
 
-driver = webdriver.Chrome(options=options)
+driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 
 # Lists to Store the Scraped Data
 titles = []
