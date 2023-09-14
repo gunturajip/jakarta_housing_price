@@ -78,6 +78,9 @@ for page in range(1, 101):
             # Title
             try:
                 title_element = element.find_element("xpath", ".//a[@title and h2]")
+
+                print(title_element)
+
                 title = title_element.text
             except NoSuchElementException:
                 title = float("nan")
