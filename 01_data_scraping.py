@@ -65,7 +65,7 @@ for page in range(1, 101):
     driver.get(url)
 
     # Using WebDriverWait to wait for the page to load completely
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 30)
     wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
 
     # Search for the property elements
