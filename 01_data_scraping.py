@@ -8,6 +8,7 @@ import re
 import time
 import random
 # import chromedriver_autoinstaller
+import undetected_chromedriver as uc
 
 from datetime import datetime, timedelta
 from google.oauth2.service_account import Credentials
@@ -60,19 +61,21 @@ options.add_argument("--disable-dev-shm-usage")
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
 options.add_experimental_option("useAutomationExtension", False)
 
-driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+# driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 # driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()), options=options)
 # driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
 
-stealth(
-    driver,
-    languages=["en-US", "en"],
-    vendor="Google Inc.",
-    platform="Win32",
-    webgl_vendor="Intel Inc.",
-    renderer="Intel Iris OpenGL Engine",
-    fix_hairline=True,
-)
+# stealth(
+#     driver,
+#     languages=["en-US", "en"],
+#     vendor="Google Inc.",
+#     platform="Win32",
+#     webgl_vendor="Intel Inc.",
+#     renderer="Intel Iris OpenGL Engine",
+#     fix_hairline=True,
+# )
+
+driver = uc.Chrome(headless=True, use_subprocess=False)
 
 # Lists to Store the Scraped Data
 titles = []
