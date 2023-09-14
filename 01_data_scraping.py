@@ -15,6 +15,9 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
 target_table = "real_estate.jakarta"
@@ -32,8 +35,6 @@ website = "https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&pag
 # path = "chromedriver.exe"
 # service = Service(path)
 # chromedriver_autoinstaller.install()
-
-
 
 options = Options()
 options.add_argument("--headless")
@@ -64,7 +65,8 @@ for page in range(1, 101):
     driver.get(url)
 
     # Property Elements
-    property_elements = driver.find_elements("xpath", "//div[contains(@class, 'card-container')]")
+    wait = WebDriverWait(driver, 10)
+    property_elements = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//div[contains(@class, 'card-container')]")))
     
     # Iterate through Each Property Element
     index = 0
