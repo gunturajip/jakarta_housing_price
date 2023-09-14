@@ -64,9 +64,12 @@ for page in range(1, 101):
     url = f"https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page={page}#qid~a46c0629-67e4-410c-9c35-0c80e98987d9"
     driver.get(url)
 
-    # Property Elements
+    # Using WebDriverWait to wait for the page to load completely
     wait = WebDriverWait(driver, 10)
-    property_elements = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//div[contains(@class, 'card-container')]")))
+    wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
+
+    # Search for the property elements
+    property_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'card-container')]")
     
     # Iterate through Each Property Element
     index = 0
