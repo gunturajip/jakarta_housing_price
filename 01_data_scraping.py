@@ -42,7 +42,7 @@ website = "https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&pag
 # chromedriver_autoinstaller.install()
 
 options = Options()
-# options.add_argument("--headless")
+options.add_argument("--headless")
 options.add_argument("window-size=1920x1080")
 
 driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()), options=options)
