@@ -70,6 +70,7 @@ for page in range(1, 101):
 
     # Search for the property elements
     property_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'card-container')]")
+    print(property_elements)
     
     # Iterate through Each Property Element
     index = 0
@@ -78,9 +79,6 @@ for page in range(1, 101):
             # Title
             try:
                 title_element = element.find_element("xpath", ".//a[@title and h2]")
-
-                print(title_element)
-
                 title = title_element.text
             except NoSuchElementException:
                 title = float("nan")
