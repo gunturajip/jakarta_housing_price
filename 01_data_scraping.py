@@ -69,14 +69,8 @@ for page in range(1, 101):
     wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
 
     # Search for the property elements
-    # property_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'card-featured__content-wrapper')]")
-    # print(property_elements)
-
-    try:
-        property_elements = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//div[contains(@class, 'card-container')]")))
-    except TimeoutException:
-        print(driver.page_source)  # Print the current page source
-        raise  # Re-raise the exception
+    property_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'card-featured__content-wrapper')]")
+    print(driver.page_source)
     
     # Iterate through Each Property Element
     index = 0
