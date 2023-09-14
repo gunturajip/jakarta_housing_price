@@ -19,14 +19,13 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 
-from selenium.webdriver.edge.service import Service as EdgeService
-from selenium.webdriver.edge.options import Options
-from webdriver_manager.microsoft import EdgeChromiumDriverManager
+# from selenium.webdriver.edge.service import Service as EdgeService
+# from selenium.webdriver.edge.options import Options
+# from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
-from selenium import webdriver
-from selenium.webdriver.firefox.service import Service as FirefoxService
-from selenium.webdriver.firefox.options import Options
-from webdriver_manager.firefox import GeckoDriverManager
+# from selenium.webdriver.firefox.service import Service as FirefoxService
+# from selenium.webdriver.firefox.options import Options
+# from webdriver_manager.firefox import GeckoDriverManager
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
@@ -45,20 +44,22 @@ query_most_recent = pd.read_gbq(f"SELECT * FROM `{project_id}.{target_table_2}`"
 query_most_recent["date"] = pd.to_datetime(query_most_recent["date"])
 
 # Browser Settings
-website = "https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page=1#qid~a46c0629-67e4-410c-9c35-0c80e98987d9"
+# website = "https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page=1#qid~a46c0629-67e4-410c-9c35-0c80e98987d9"
 # path = "chromedriver.exe"
 # service = Service(path)
 # chromedriver_autoinstaller.install()
 
 options = Options()
+user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
+options.add_argument(f"user-agent={user_agent}")
 options.add_argument("--headless")
 options.add_argument("window-size=1920x1080")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 
-# driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 # driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()), options=options)
-driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
+# driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
 
 # Lists to Store the Scraped Data
 titles = []
