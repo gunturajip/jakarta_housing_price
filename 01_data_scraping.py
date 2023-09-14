@@ -14,7 +14,7 @@ from geopy.geocoders import Nominatim
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -69,8 +69,14 @@ for page in range(1, 101):
     wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
 
     # Search for the property elements
-    property_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'card-featured__content-wrapper')]")
-    print(property_elements)
+    # property_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'card-featured__content-wrapper')]")
+    # print(property_elements)
+
+    try:
+        property_elements = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//div[contains(@class, 'card-container')]")))
+    except TimeoutException:
+        print(driver.page_source)  # Print the current page source
+        raise  # Re-raise the exception
     
     # Iterate through Each Property Element
     index = 0
