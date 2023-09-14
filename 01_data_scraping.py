@@ -5,6 +5,8 @@ import urllib.parse
 import json
 import os
 import re
+import time
+import random
 # import chromedriver_autoinstaller
 
 from datetime import datetime, timedelta
@@ -61,6 +63,8 @@ conditions_met = False
 for page in range(1, 101):
     print(f"Scraping page {page}")
 
+    time.sleep(random.randint(1, 10))
+
     url = f"https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page={page}#qid~a46c0629-67e4-410c-9c35-0c80e98987d9"
     driver.get(url)
 
@@ -70,7 +74,7 @@ for page in range(1, 101):
 
     # Search for the property elements
     property_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'card-featured__content-wrapper')]")
-    print(driver.page_source)
+    print(property_elements)
     
     # Iterate through Each Property Element
     index = 0
