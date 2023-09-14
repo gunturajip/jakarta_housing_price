@@ -69,7 +69,7 @@ for page in range(1, 101):
     wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
 
     # Search for the property elements
-    property_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'card-container')]")
+    property_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'card-featured__content-wrapper')]")
     print(property_elements)
     
     # Iterate through Each Property Element
@@ -78,77 +78,70 @@ for page in range(1, 101):
         try:
             # Title
             try:
-                title_element = element.find_element("xpath", ".//a[@title and h2]")
-                title = title_element.text
+                title_element = element.find_element(By.XPATH, ".//a[h2]")
+                title = title_element.get_attribute("title")
             except NoSuchElementException:
                 title = float("nan")
 
             # Link
             try:
-                link_element = element.find_element("xpath", ".//a[@title and h2]")
-                link = link_element.get_attribute("href")
+                link = title_element.get_attribute("href")
             except NoSuchElementException:
                 link = float("nan")
 
             # Location
             try:
-                location_element = element.find_element("xpath", ".//a[@title and h2]/following-sibling::span")
-                location = location_element.text
+                location = element.find_element(By.XPATH, ".//span[contains(text(), ',')]").text
             except NoSuchElementException:
                 location = float("nan")
 
             # Price
             try:
-                price_element = element.find_element("class name", "card-featured__middle-section__price")
-                price = price_element.text
+                price = element.find_element(By.CLASS_NAME, "card-featured__middle-section__price").text.split("\n")[0]
             except NoSuchElementException:
                 price = float("nan")
 
             # Features
-            features_element = element.find_element("class name", "card-featured__middle-section__attribute")
+            features_element = element.find_elements(By.XPATH, ".//div[@class='attribute-grid']/span[@class='attribute-text']")
 
-            # Bedroom
-            try:
-                bedroom_element = features_element.find_element("css selector", "div.ui-molecules-list__item:nth-child(1) span.attribute-text")
-                bedroom = int(bedroom_element.text) if bedroom_element.text.isdigit() else float("nan")
-            except NoSuchElementException:
-                bedroom = float("nan")
+            # Extracting the attributes (like bedroom, bathroom, garage) from features_element
+            attributes = [float("nan")] * 3
 
-            # Bathroom
-            try:
-                bathroom_element = features_element.find_element("css selector", "div.ui-molecules-list__item:nth-child(2) span.attribute-text")
-                bathroom = int(bathroom_element.text) if bathroom_element.text.isdigit() else float("nan")
-            except NoSuchElementException:
-                bathroom = float("nan")
+            for idx, attr_elem in enumerate(features_element[:3]):
+                text_content = attr_elem.text
+                if text_content.isdigit():
+                    attributes[idx] = int(text_content)
 
-            # Garage
-            try:
-                garage_element = features_element.find_element("css selector", "div.ui-molecules-list__item:nth-child(3) span.attribute-text")
-                garage = int(garage_element.text) if garage_element.text.isdigit() else float("nan")
-            except NoSuchElementException:
-                garage = float("nan")
+            bedroom, bathroom, garage = attributes
 
             # Land Area
             try:
-                land_area_element = element.find_element("xpath", ".//div[contains(text(), 'LT : ')]/span")
-                land_area_text = land_area_element.text.strip()
-                land_area = int(land_area_text.split()[0]) if land_area_text.split()[0].isdigit() else float("nan")
+                land_area_text = element.find_element(By.XPATH, ".//div[contains(text(), 'LT : ')]/span").text.strip()
+                land_area = int(re.search(r"\d+", land_area_text).group()) if re.search(r"\d+", land_area_text) else float("nan")
             except NoSuchElementException:
                 land_area = float("nan")
 
             # Building Area
             try:
-                building_area_element = element.find_element("xpath", ".//div[contains(text(), 'LB : ')]/span")
-                building_area_text = building_area_element.text.strip()
-                building_area = int(building_area_text.split()[0]) if building_area_text.split()[0].isdigit() else float("nan")
+                building_area_text = element.find_element(By.XPATH, ".//div[contains(text(), 'LB : ')]/span").text.strip()
+                building_area = int(re.search(r"\d+", building_area_text).group()) if re.search(r"\d+", building_area_text) else float("nan")
             except NoSuchElementException:
                 building_area = float("nan")
 
             # Agent & Date
             try:
-                agent_date_element = element.find_element("class name", "ui-organisms-card-r123-basic__bottom-section__agent")
-                agent = agent_date_element.find_element("tag name", "p").text.strip()
-                date = agent_date_element.find_elements("tag name", "p")[1].text.strip() if len(agent_date_element.find_elements("tag name", "p")) > 1 else float("nan")
+                agent_date_element = element.find_element(By.CLASS_NAME, "ui-organisms-card-r123-basic__bottom-section__agent")
+                
+                time_info = agent_date_element.find_element(By.XPATH, ".//p[1]").text
+                time_pattern = re.compile(r'(\d+\s\w+)')
+                time_match = time_pattern.search(time_info)
+
+                if time_match:
+                    agent = time_match.group(1)
+                else:
+                    agent = float("nan")
+
+                date = agent_date_element.find_element(By.XPATH, ".//p[2]").text.strip()
             except NoSuchElementException:
                 agent = float("nan")
                 date = float("nan")
@@ -189,8 +182,8 @@ for page in range(1, 101):
             def subtract_time_from_now(time_string):
                 time_parts = time_string.split()
 
-                number = int(time_parts[1])
-                unit = time_parts[2]
+                number = int(time_parts[0])
+                unit = time_parts[-1]
 
                 now = datetime.now() + timedelta(hours=7)
                 # now = datetime.now()
