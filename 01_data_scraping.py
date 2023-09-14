@@ -14,16 +14,20 @@ from google.oauth2.service_account import Credentials
 from geopy.geocoders import Nominatim
 
 from selenium import webdriver
+
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+
+from selenium.webdriver.edge.service import Service as EdgeService
+from selenium.webdriver.edge.options import Options
+from webdriver_manager.microsoft import EdgeChromiumDriverManager
+
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-# from selenium.webdriver.edge.service import Service as EdgeService
-# from selenium.webdriver.edge.options import Options
-# from webdriver_manager.microsoft import EdgeChromiumDriverManager
+
 
 target_table = "real_estate.jakarta"
 target_table_2 = "real_estate.most_recent"
@@ -47,7 +51,8 @@ options.add_argument("window-size=1920x1080")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 
-driver = webdriver.Edge(service=ChromeService(ChromeDriverManager().install()), options=options)
+# driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()), options=options)
 
 # Lists to Store the Scraped Data
 titles = []
