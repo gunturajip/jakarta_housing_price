@@ -32,6 +32,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from selenium_stealth import stealth
 
 target_table = "real_estate.jakarta"
 target_table_2 = "real_estate.most_recent"
@@ -50,16 +51,28 @@ query_most_recent["date"] = pd.to_datetime(query_most_recent["date"])
 # chromedriver_autoinstaller.install()
 
 options = Options()
-user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
-options.add_argument(f"user-agent={user_agent}")
+# user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
+# options.add_argument(f"user-agent={user_agent}")
 options.add_argument("--headless")
 options.add_argument("window-size=1920x1080")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
+options.add_experimental_option("excludeSwitches", ["enable-automation"])
+options.add_experimental_option("useAutomationExtension", False)
 
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 # driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()), options=options)
 # driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
+
+stealth(
+    driver,
+    languages=["en-US", "en"],
+    vendor="Google Inc.",
+    platform="Win32",
+    webgl_vendor="Intel Inc.",
+    renderer="Intel Iris OpenGL Engine",
+    fix_hairline=True,
+)
 
 # Lists to Store the Scraped Data
 titles = []
