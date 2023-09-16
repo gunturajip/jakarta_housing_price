@@ -4,51 +4,57 @@ executors:
   python-executor:
     docker:
       - image: cimg/python:3.11
+      - image: circleci/mysql:5.7
 
 jobs:
   build:
     executor: python-executor
     steps:
       - checkout
-
+      
       - run:
-          name: Install requirements
+          name: Update System and Install Chrome
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y libappindicator1 fonts-liberation libasound2 libnspr4 libnss3 libxss1 xdg-utils
+            wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+            sudo dpkg -i google-chrome*.deb
+            sudo apt --fix-broken install
+      
+      - run:
+          name: Install ChromeDriver
+          command: |
+            CHROME_MAIN_VERSION=`google-chrome-stable --version | sed -E "s/.* ([0-9]+)(\.[0-9]+){3}.*/\1/"`
+            wget "https://chromedriver.storage.googleapis.com/$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_MAIN_VERSION})/chromedriver_linux64.zip"
+            unzip chromedriver_linux64.zip
+            sudo mv chromedriver /usr/local/bin/
+            sudo chmod +x /usr/local/bin/chromedriver
+      
+      - run:
+          name: Install Python Dependencies
           command: |
             python -m pip install --upgrade pip
             pip install -r requirements.txt
-
+      
       - run:
-          name: Data scraping
+          name: Run Data Scraping Script
           command: python 01_data_scraping.py
 
       - run:
-          name: Data cleaning
+          name: Run Data Cleaning Script
           command: python 02_data_cleaning.py
 
       - run:
-          name: Data storing
+          name: Run Data Storing Script
           command: python 03_data_storing.py
 
       - run:
-          name: Update README
+          name: Run README Update Script
           command: python 04_update_README.py
-
-      - run:
-          name: Commit and push README
-          command: |
-            git config --global user.name "${USERNAME_GITHUB}"
-            git config --global user.email "${EMAIL_GITHUB}"
-            git pull origin main
-            git add README.md
-            git commit -m "Updated README"
-            git push
-          environment:
-            USERNAME_GITHUB: ${USERNAME_GITHUB}
-            EMAIL_GITHUB: ${EMAIL_GITHUB}
 
 workflows:
   version: 2
-  build-deploy:
+  scrape-and-store:
     jobs:
       - build:
           filters:
@@ -56,8 +62,6 @@ workflows:
               only:
                 - main
   schedule:
-    jobs:
-      - build
     triggers:
       - schedule:
           cron: "0 1,7,13,19 * * *"
@@ -65,3 +69,5 @@ workflows:
             branches:
               only:
                 - main
+    jobs:
+      - build
