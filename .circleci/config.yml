@@ -12,13 +12,6 @@ jobs:
       - checkout
 
       - run:
-          name: Decrypt files
-          command: |
-            gpg --quiet --batch --yes --decrypt --passphrase="$PASSPHRASE" --output jakarta-housing-price-595a9cff2797.json jakarta-housing-price-595a9cff2797.json.gpg
-          environment:
-            PASSPHRASE: ${PASSPHRASE}
-
-      - run:
           name: Install requirements
           command: |
             python -m pip install --upgrade pip
