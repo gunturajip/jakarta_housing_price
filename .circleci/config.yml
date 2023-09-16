@@ -1,0 +1,72 @@
+version: 2.1
+
+executors:
+  python-executor:
+    docker:
+      - image: cimg/python:3.11
+
+jobs:
+  build:
+    executor: python-executor
+    steps:
+      - checkout
+
+      - run:
+          name: Decrypt files
+          command: |
+            gpg --quiet --batch --yes --decrypt --passphrase="$PASSPHRASE" --output jakarta-housing-price-595a9cff2797.json jakarta-housing-price-595a9cff2797.json.gpg
+          environment:
+            PASSPHRASE: ${PASSPHRASE}
+
+      - run:
+          name: Install requirements
+          command: |
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+
+      - run:
+          name: Data scraping
+          command: python 01_data_scraping.py
+
+      - run:
+          name: Data cleaning
+          command: python 02_data_cleaning.py
+
+      - run:
+          name: Data storing
+          command: python 03_data_storing.py
+
+      - run:
+          name: Update README
+          command: python 04_update_README.py
+
+      - run:
+          name: Commit and push README
+          command: |
+            git config --global user.name "${USERNAME_GITHUB}"
+            git config --global user.email "${EMAIL_GITHUB}"
+            git pull origin main
+            git add README.md
+            git commit -m "Updated README"
+            git push
+          environment:
+            USERNAME_GITHUB: ${USERNAME_GITHUB}
+            EMAIL_GITHUB: ${EMAIL_GITHUB}
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only:
+                - main
+  schedule:
+    triggers:
+      - schedule:
+          cron: "0 1,7,13,19 * * *"
+          filters:
+            branches:
+              only:
+                - main
