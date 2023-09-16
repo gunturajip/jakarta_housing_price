@@ -16,10 +16,9 @@ jobs:
           name: Update System and Install Chrome
           command: |
             sudo apt-get update
-            sudo apt-get install -y libappindicator1 fonts-liberation libasound2 libnspr4 libnss3 libxss1 xdg-utils
+            sudo apt-get install -y libatk-bridge2.0-0 libatspi2.0-0 libgbm1 libgtk-3-0 libu2f-udev libvulkan1 libxkbcommon0
             wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-            sudo dpkg -i google-chrome*.deb
-            sudo apt --fix-broken install
+            sudo dpkg -i google-chrome*.deb || sudo apt --fix-broken install -y
       
       - run:
           name: Install ChromeDriver
