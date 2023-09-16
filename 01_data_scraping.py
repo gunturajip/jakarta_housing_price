@@ -7,7 +7,7 @@ import os
 import re
 import time
 import random
-import undetected_chromedriver as uc
+# import undetected_chromedriver as uc
 
 from datetime import datetime, timedelta
 from google.oauth2.service_account import Credentials
