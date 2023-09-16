@@ -96,7 +96,7 @@ for page in range(1, 101):
     wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
 
     def verify_success(sb):
-        sb.assert_element('img[alt="Logo Assembly"]', timeout=8)
+        sb.assert_element('img[alt="Logo Rumah123"]', timeout=8)
         sb.sleep(4)
 
     with SB(uc_cdp=True, guest_mode=True) as sb:
