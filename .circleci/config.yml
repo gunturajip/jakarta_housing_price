@@ -63,6 +63,16 @@ jobs:
           name: Run README Update Script
           command: python 04_update_README.py
 
+      - run:
+          name: Commit and push
+          command: |
+            git config --global user.name "${USERNAME_GITHUB}"
+            git config --global user.email "${EMAIL_GITHUB}"
+            git pull origin main
+            git add .
+            git commit -m "Commit from CircleCI" || echo "No changes to commit"
+            git push
+
 workflows:
   version: 2
   scrape-and-store:
