@@ -9,6 +9,7 @@ import re
 from datetime import datetime
 from google.oauth2.service_account import Credentials
 from geopy.geocoders import Nominatim
+from cryptography.fernet import Fernet
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -20,9 +21,21 @@ df = pd.read_csv("scraped_data.csv")
 target_table = "real_estate.jakarta"
 target_table_2 = "real_estate.most_recent"
 project_id = "jakarta-housing-price"
-credential_file = "jakarta-housing-price-595a9cff2797.json"
-credential = Credentials.from_service_account_file(credential_file)
 job_location = "asia-southeast2"
+
+# Decrypt the credentials file
+def decrypt_file(encrypted_file, key):
+    cipher_suite = Fernet(key)
+    with open(encrypted_file, "rb") as file:
+        encrypted_data = file.read()
+    decrypted_data = cipher_suite.decrypt(encrypted_data)
+    return json.loads(decrypted_data.decode("utf-8"))
+
+# Get the FERNET_KEY from the environment
+fernet_key = os.environ.get("FERNET_KEY").encode()
+decrypted_credentials = decrypt_file("encryption/encrypted_data.bin", fernet_key)
+
+credential = Credentials.from_service_account_info(decrypted_credentials)
 
 query_most_recent = pd.read_gbq(f"SELECT * FROM `{project_id}.{target_table_2}`", project_id=project_id, credentials=credential)
 query_most_recent["date"] = pd.to_datetime(query_most_recent["date"])
