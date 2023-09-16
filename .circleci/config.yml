@@ -3,7 +3,7 @@ version: 2.1
 executors:
   python-executor:
     docker:
-      - image: cimg/python:3.11
+      - image: cimg/python:3.11-browsers  # This image includes Python and browsers.
       - image: circleci/mysql:5.7
 
 jobs:
@@ -11,15 +11,13 @@ jobs:
     executor: python-executor
     steps:
       - checkout
-      
+
       - run:
-          name: Update System and Install Chrome
+          name: Update System and Install Dependencies
           command: |
             sudo apt-get update
             sudo apt-get install -y libatk-bridge2.0-0 libatspi2.0-0 libgbm1 libgtk-3-0 libu2f-udev libvulkan1 libxkbcommon0
-            wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-            sudo dpkg -i google-chrome*.deb || sudo apt --fix-broken install -y
-      
+
       # - run:
       #     name: Install ChromeDriver
       #     command: |
@@ -28,13 +26,22 @@ jobs:
       #       unzip chromedriver_linux64.zip
       #       sudo mv chromedriver /usr/local/bin/
       #       sudo chmod +x /usr/local/bin/chromedriver
+
+      - run:
+          name: Start Xvfb
+          command: Xvfb :99 -screen 0 1280x1024x24
+          background: true
+
+      - run:
+          name: Set Environment Variables
+          command: echo 'export DISPLAY=:99' >> $BASH_ENV
       
       - run:
           name: Install Python Dependencies
           command: |
             python -m pip install --upgrade pip
             pip install -r requirements.txt
-      
+
       - run:
           name: Run Data Scraping Script
           command: python 01_data_scraping.py
