@@ -22,7 +22,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium_stealth import stealth
+# from selenium_stealth import stealth
 from seleniumbase import SB
 
 target_table = "real_estate.jakarta"
@@ -57,15 +57,15 @@ options.add_experimental_option("useAutomationExtension", False)
 
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 
-stealth(
-    driver,
-    languages=["en-US", "en"],
-    vendor="Google Inc.",
-    platform="Win32",
-    webgl_vendor="Intel Inc.",
-    renderer="Intel Iris OpenGL Engine",
-    fix_hairline=True,
-)
+# stealth(
+#     driver,
+#     languages=["en-US", "en"],
+#     vendor="Google Inc.",
+#     platform="Win32",
+#     webgl_vendor="Intel Inc.",
+#     renderer="Intel Iris OpenGL Engine",
+#     fix_hairline=True,
+# )
 
 # driver = uc.Chrome(headless=True, use_subprocess=False)
 

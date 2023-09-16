@@ -11,6 +11,6 @@ streamlit==1.26.0
 altair==5.1.1
 cryptography==40.0.2
 webdriver-manager==4.0.0
-selenium-stealth==1.0.6
-undetected-chromedriver==3.5.3
+# selenium-stealth==1.0.6
+# undetected-chromedriver==3.5.3
 seleniumbase==4.18.7
