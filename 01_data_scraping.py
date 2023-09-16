@@ -7,7 +7,6 @@ import os
 import re
 import time
 import random
-# import chromedriver_autoinstaller
 import undetected_chromedriver as uc
 
 from datetime import datetime, timedelta
@@ -16,25 +15,15 @@ from geopy.geocoders import Nominatim
 from cryptography.fernet import Fernet
 
 from selenium import webdriver
-
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-
-# from selenium.webdriver.edge.service import Service as EdgeService
-# from selenium.webdriver.edge.options import Options
-# from webdriver_manager.microsoft import EdgeChromiumDriverManager
-
-# from selenium.webdriver.firefox.service import Service as FirefoxService
-# from selenium.webdriver.firefox.options import Options
-# from webdriver_manager.firefox import GeckoDriverManager
-
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from selenium_stealth import stealth
+from seleniumbase import SB
 
 target_table = "real_estate.jakarta"
 target_table_2 = "real_estate.most_recent"
@@ -58,15 +47,7 @@ credential = Credentials.from_service_account_info(decrypted_credentials)
 query_most_recent = pd.read_gbq(f"SELECT * FROM `{project_id}.{target_table_2}`", project_id=project_id, credentials=credential)
 query_most_recent["date"] = pd.to_datetime(query_most_recent["date"])
 
-# Browser Settings
-# website = "https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page=1#qid~a46c0629-67e4-410c-9c35-0c80e98987d9"
-# path = "chromedriver.exe"
-# service = Service(path)
-# chromedriver_autoinstaller.install()
-
 options = Options()
-# user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
-# options.add_argument(f"user-agent={user_agent}")
 # options.add_argument("--headless")
 options.add_argument("window-size=1920x1080")
 # options.add_argument("--no-sandbox")
@@ -75,8 +56,6 @@ options.add_experimental_option("excludeSwitches", ["enable-automation"])
 options.add_experimental_option("useAutomationExtension", False)
 
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
-# driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()), options=options)
-# driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
 
 stealth(
     driver,
@@ -116,9 +95,29 @@ for page in range(1, 101):
     wait = WebDriverWait(driver, 30)
     wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
 
+    def verify_success(sb):
+        sb.assert_element('img[alt="Logo Assembly"]', timeout=8)
+        sb.sleep(4)
+
+    with SB(uc_cdp=True, guest_mode=True) as sb:
+        sb.open(url)
+        try:
+            verify_success(sb)
+        except Exception:
+            if sb.is_element_visible('input[value*="Verify"]'):
+                sb.click('input[value*="Verify"]')
+            elif sb.is_element_visible('iframe[title*="challenge"]'):
+                sb.switch_to_frame('iframe[title*="challenge"]')
+                sb.click("span.mark")
+            else:
+                raise Exception("Detected!")
+            try:
+                verify_success(sb)
+            except Exception:
+                raise Exception("Detected!")
+
     # Search for the property elements
     property_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'card-featured__content-wrapper')]")
-    print(property_elements)
     driver.get_screenshot_as_file("page_screenshot.png")
     
     # Iterate through Each Property Element

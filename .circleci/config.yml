@@ -69,7 +69,7 @@ jobs:
             git config --global user.name "${USERNAME_GITHUB}"
             git config --global user.email "${EMAIL_GITHUB}"
             git pull origin main
-            git add .
+            git add README.md page_screenshot.png
             git commit -m "Commit from CircleCI" || echo "No changes to commit"
             git push
 
