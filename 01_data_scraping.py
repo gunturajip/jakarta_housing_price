@@ -119,6 +119,7 @@ for page in range(1, 101):
     # Search for the property elements
     property_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'card-featured__content-wrapper')]")
     print(property_elements)
+    print(driver.page_source)
     
     # Iterate through Each Property Element
     index = 0
