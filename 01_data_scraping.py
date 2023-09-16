@@ -48,10 +48,10 @@ query_most_recent = pd.read_gbq(f"SELECT * FROM `{project_id}.{target_table_2}`"
 query_most_recent["date"] = pd.to_datetime(query_most_recent["date"])
 
 options = Options()
-# options.add_argument("--headless")
+options.add_argument("--headless")
 options.add_argument("window-size=1920x1080")
-# options.add_argument("--no-sandbox")
-# options.add_argument("--disable-dev-shm-usage")
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
 options.add_experimental_option("useAutomationExtension", False)
 

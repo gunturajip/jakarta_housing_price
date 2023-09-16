@@ -12,34 +12,34 @@ jobs:
     steps:
       - checkout
 
-      - run:
-          name: Update System, Install Chrome, and Xvfb
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y libatk-bridge2.0-0 libatspi2.0-0 libgbm1 libgtk-3-0 libu2f-udev libvulkan1 libxkbcommon0 xvfb
-            wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-            sudo dpkg -i google-chrome*.deb || sudo apt --fix-broken install -y
+      # - run:
+      #     name: Update System, Install Chrome, and Xvfb
+      #     command: |
+      #       sudo apt-get update
+      #       sudo apt-get install -y libatk-bridge2.0-0 libatspi2.0-0 libgbm1 libgtk-3-0 libu2f-udev libvulkan1 libxkbcommon0 xvfb
+      #       wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+      #       sudo dpkg -i google-chrome*.deb || sudo apt --fix-broken install -y
 
-      - run:
-          name: Kill existing Xvfb processes
-          command: |
-            if [ -f /tmp/.X100-lock ]; then
-              echo "Removing Xvfb lock file..."
-              sudo rm /tmp/.X100-lock
-            fi
-            if pgrep Xvfb; then
-              echo "Killing existing Xvfb processes..."
-              sudo pkill Xvfb
-            fi
+      # - run:
+      #     name: Kill existing Xvfb processes
+      #     command: |
+      #       if [ -f /tmp/.X100-lock ]; then
+      #         echo "Removing Xvfb lock file..."
+      #         sudo rm /tmp/.X100-lock
+      #       fi
+      #       if pgrep Xvfb; then
+      #         echo "Killing existing Xvfb processes..."
+      #         sudo pkill Xvfb
+      #       fi
 
-      - run:
-          name: Start Xvfb
-          command: Xvfb :100 -screen 0 1280x1024x24
-          background: true
+      # - run:
+      #     name: Start Xvfb
+      #     command: Xvfb :100 -screen 0 1280x1024x24
+      #     background: true
 
-      - run:
-          name: Set DISPLAY Environment Variable
-          command: echo 'export DISPLAY=:100' >> $BASH_ENV
+      # - run:
+      #     name: Set DISPLAY Environment Variable
+      #     command: echo 'export DISPLAY=:100' >> $BASH_ENV
 
       - run:
           name: Install Python Dependencies
