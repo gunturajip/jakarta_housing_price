@@ -60,12 +60,12 @@ building_areas = []
 agents = []
 dates = []
 
-def verify_and_screenshot(sb, screenshot_name="page_screenshot.png"):
-    """ Verify successful page load and take a screenshot """
-    if sb.is_element_present('body'):  # Simple check to see if the page loaded
-        sb.save_screenshot(screenshot_name)
-    else:
-        raise Exception("Failed to load the page!")
+# def verify_and_screenshot(sb, screenshot_name="page_screenshot.png"):
+#     """ Verify successful page load and take a screenshot """
+#     if sb.is_element_present('body'):  # Simple check to see if the page loaded
+#         sb.save_screenshot(screenshot_name)
+#     else:
+#         raise Exception("Failed to load the page!")
 
 # Iterate through Each Page
 conditions_met = False
@@ -73,18 +73,28 @@ conditions_met = False
 with SB(uc_cdp=True, guest_mode=True, headless=True) as sb:
     for page in range(1, 2):
         sb.open(f"https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page={page}#qid~a46c0629-67e4-410c-9c35-0c80e98987d9")
-        try:
-            verify_and_screenshot(sb)
-        except Exception:
-            if sb.is_element_visible('input[value*="Verify"]'):
-                sb.click('input[value*="Verify"]')
-                verify_and_screenshot(sb, "screenshot_after_verify.png")
-            elif sb.is_element_visible('iframe[title*="challenge"]'):
-                sb.switch_to_frame('iframe[title*="challenge"]')
-                sb.click("span.mark")
-                verify_and_screenshot(sb, "screenshot_after_challenge.png")
-            else:
-                raise Exception("Unexpected CAPTCHA or challenge detected!")
+        # try:
+        #     verify_and_screenshot(sb)
+        # except Exception:
+        #     if sb.is_element_visible('input[value*="Verify"]'):
+        #         sb.click('input[value*="Verify"]')
+        #         verify_and_screenshot(sb, "screenshot_after_verify.png")
+        #     elif sb.is_element_visible('iframe[title*="challenge"]'):
+        #         sb.switch_to_frame('iframe[title*="challenge"]')
+        #         sb.click("span.mark")
+        #         verify_and_screenshot(sb, "screenshot_after_challenge.png")
+        #     else:
+        #         raise Exception("Unexpected CAPTCHA or challenge detected!")
+
+        if sb.is_element_visible('input[value*="Verify"]'):
+            sb.click('input[value*="Verify"]')
+            sb.save_screenshot("page_screenshot.png")
+        elif sb.is_element_visible('iframe[title*="challenge"]'):
+            sb.switch_to_frame('iframe[title*="challenge"]')
+            sb.click("span.mark")
+            sb.save_screenshot("page_screenshot.png")
+        else:
+            sb.save_screenshot("page_screenshot.png")
             
         property_elements = sb.find_elements(By.XPATH, "//div[contains(@class, 'card-featured__content-wrapper')]")
         print(property_elements)
