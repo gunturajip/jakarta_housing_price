@@ -100,6 +100,7 @@ for page in range(1, 101):
     try:
         security_check_header = driver.find_element(By.XPATH, "//h2[text()='Checking if the site connection is secure']")
         if security_check_header:
+            print("Checking if the site connection is secure")
             checkbox = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="checkbox"]')))
             checkbox.click()
             print("Security check handled!")
