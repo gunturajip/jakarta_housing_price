@@ -104,10 +104,9 @@ for page in range(1, 2):
 
     try:
         # Attempt to switch to iframe and interact with the checkbox
+        driver.get_screenshot_as_file("page_screenshot_before.png")
         WebDriverWait(driver, 60).until(EC.frame_to_be_available_and_switch_to_it((By.CSS_SELECTOR,"iframe[title='Widget containing a Cloudflare security challenge']")))
         WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "label.ctp-checkbox-label"))).click()
-        time.sleep(30)  # Wait a bit after clicking for things to settle or redirect
-        driver.refresh()
         time.sleep(10)
     except (NoSuchElementException, TimeoutException) as e:
         print("Exception occurred:", e)
@@ -115,7 +114,7 @@ for page in range(1, 2):
     # Search for the property elements
     property_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'card-featured__content-wrapper')]")
     print(property_elements)
-    driver.get_screenshot_as_file("page_screenshot.png")
+    driver.get_screenshot_as_file("page_screenshot_after.png")
     
     # Iterate through Each Property Element
     index = 0
