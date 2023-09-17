@@ -102,13 +102,13 @@ for page in range(1, 2):
 
     url = f"https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page={page}#qid~a46c0629-67e4-410c-9c35-0c80e98987d9"
     driver.get(url)
-    time.sleep(5)
+    time.sleep(60)
 
     try:
         # Attempt to switch to iframe and interact with the checkbox
-        WebDriverWait(driver, 20).until(EC.frame_to_be_available_and_switch_to_it((By.CSS_SELECTOR,"iframe[title='Widget containing a Cloudflare security challenge']")))
-        WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "label.ctp-checkbox-label"))).click()
-        time.sleep(30)
+        WebDriverWait(driver, 60).until(EC.frame_to_be_available_and_switch_to_it((By.CSS_SELECTOR,"iframe[title='Widget containing a Cloudflare security challenge']")))
+        WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "label.ctp-checkbox-label"))).click()
+        time.sleep(60)
     except (NoSuchElementException, TimeoutException):
         # If the iframe or checkbox can't be found, it means you already passed the challenge on a previous page.
         # Therefore, just continue without doing anything.
