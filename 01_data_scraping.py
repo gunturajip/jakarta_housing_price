@@ -23,7 +23,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 # from selenium_stealth import stealth
-# from seleniumbase import SB
+from seleniumbase import SB
 
 target_table = "real_estate.jakarta"
 target_table_2 = "real_estate.most_recent"
@@ -86,10 +86,32 @@ dates = []
 # Iterate through Each Page
 conditions_met = False
 
+def verify_success(sb):
+    sb.assert_element('img[alt="logo rumah123"]', timeout=45)
+    sb.sleep(45)
+
 for page in range(1, 101):
     print(f"Scraping page {page}")
 
     url = f"https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page={page}#qid~a46c0629-67e4-410c-9c35-0c80e98987d9"
+
+    with SB(uc_cdp=True, guest_mode=True) as sb:
+        sb.open(url)
+        try:
+            verify_success(sb)
+        except Exception:
+            if sb.is_element_visible('input[value*="Verify"]'):
+                sb.click('input[value*="Verify"]')
+            elif sb.is_element_visible('iframe[title*="challenge"]'):
+                sb.switch_to_frame('iframe[title*="challenge"]')
+                sb.click("span.mark")
+            else:
+                raise Exception("Verification Detected!")
+            try:
+                verify_success(sb)
+            except Exception:
+                raise Exception("Verification Detected after attempting!")
+
     driver.get(url)
 
     # Using WebDriverWait to wait for the page to load completely
