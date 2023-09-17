@@ -109,7 +109,7 @@ with SB(uc_cdp=True, guest_mode=True) as sb:
 
                     # Price
                     try:
-                        price = element.find_element(By.CLASS_NAME, "card-featured__middle-section__price").text.split("\n")[0]
+                        price = element.find_element(By.CLASS_NAME, "card-featured__middle-section__price").text
                     except NoSuchElementException:
                         price = float("nan")
 
