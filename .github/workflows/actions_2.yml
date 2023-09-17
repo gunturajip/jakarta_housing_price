@@ -23,20 +23,20 @@ jobs:
       - name: Data scraping
         run: python 01_data_scraping.py
 
-      # - name: Data cleaning
-      #   run: python 02_data_cleaning.py
+      - name: Data cleaning
+        run: python 02_data_cleaning.py
 
-      # - name: Data storing
-      #   run: python 03_data_storing.py
+      - name: Data storing
+        run: python 03_data_storing.py
 
-      # - name: Update README
-      #   run: python 04_update_README.py
+      - name: Update README
+        run: python 04_update_README.py
 
       - name: Commit and push README
         run: |
           git config --global user.name "${{ secrets.USERNAME_GITHUB }}"
           git config --global user.email "${{ secrets.EMAIL_GITHUB }}"
           git pull origin main
-          git add page_screenshot.png
+          git add page_screenshot_after.png page_screenshot_before.png README.md
           git commit -m "Commit from GitHub Actions"
           git push
