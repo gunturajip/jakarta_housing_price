@@ -57,7 +57,7 @@ options.add_argument("--disable-dev-shm-usage")
 # options.add_experimental_option("useAutomationExtension", False)
 
 # driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
-driver = uc.Chrome(options=options)
+driver = uc.Chrome(options=options, version_main=116)
 
 # stealth(
 #     driver,
