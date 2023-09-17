@@ -7,7 +7,7 @@ import os
 import re
 import time
 import random
-# import undetected_chromedriver as uc
+import undetected_chromedriver as uc
 
 from datetime import datetime, timedelta
 from google.oauth2.service_account import Credentials
@@ -56,7 +56,8 @@ options.add_argument("--disable-dev-shm-usage")
 # options.add_experimental_option("excludeSwitches", ["enable-automation"])
 # options.add_experimental_option("useAutomationExtension", False)
 
-driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+# driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+driver = uc.Chrome(options=options)
 
 # stealth(
 #     driver,
@@ -85,15 +86,6 @@ dates = []
 
 # Iterate through Each Page
 conditions_met = False
-
-def verify_success(sb):
-    try:
-        # Try matching with the exact case first.
-        sb.assert_element('img[alt="Logo Rumah123"]', timeout=45)
-    except Exception:
-        # If that doesn't work, try a case-insensitive match.
-        sb.assert_element("//img[translate(@alt, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='logo rumah123']", timeout=45)
-    sb.sleep(45)
 
 for page in range(1, 2):
     print(f"Scraping page {page}")
