@@ -100,6 +100,10 @@ for page in range(1, 2):
 
     url = f"https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page={page}#qid~a46c0629-67e4-410c-9c35-0c80e98987d9"
 
+    # Using WebDriverWait to wait for the page to load completely
+    wait = WebDriverWait(driver, 30)
+    wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
+
     with SB(uc_cdp=True, guest_mode=True) as sb:
         sb.open(url)
         try:
@@ -118,10 +122,6 @@ for page in range(1, 2):
                 raise Exception("Verification Detected after attempting!")
 
     driver.get(url)
-
-    # Using WebDriverWait to wait for the page to load completely
-    wait = WebDriverWait(driver, 30)
-    wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
 
     # Search for the property elements
     property_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'card-featured__content-wrapper')]")
