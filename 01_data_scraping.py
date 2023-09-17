@@ -87,7 +87,12 @@ dates = []
 conditions_met = False
 
 def verify_success(sb):
-    sb.assert_element('img[alt="logo rumah123"]', timeout=45)
+    try:
+        # Try matching with the exact case first.
+        sb.assert_element('img[alt="Logo Rumah123"]', timeout=45)
+    except Exception:
+        # If that doesn't work, try a case-insensitive match.
+        sb.assert_element("//img[translate(@alt, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='logo rumah123']", timeout=45)
     sb.sleep(45)
 
 for page in range(1, 101):
@@ -117,25 +122,6 @@ for page in range(1, 101):
     # Using WebDriverWait to wait for the page to load completely
     wait = WebDriverWait(driver, 30)
     wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
-
-    # Assuming you're on the page where the iframe might appear
-    try:
-        # Wait for the iframe and switch to it
-        iframe = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'iframe#cf-chl-widget-ii8u9')))
-        driver.switch_to.frame(iframe)
-        
-        # Interact with the checkbox inside the iframe
-        checkbox = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="checkbox"]')))
-        checkbox.click()
-        
-        # Switch back to the default content
-        driver.switch_to.default_content()
-        print("Security check handled!")
-        
-    except TimeoutException:
-        # Switch back to the default content in case of any error while interacting with iframe
-        driver.switch_to.default_content()
-        print("No security check found on this page. Continuing with scraping.")
 
     # Search for the property elements
     property_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'card-featured__content-wrapper')]")
