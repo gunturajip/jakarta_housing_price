@@ -64,7 +64,7 @@ dates = []
 conditions_met = False
 
 with SB(uc_cdp=True, guest_mode=True) as sb:
-    sb.set_script_timeout(120)
+    sb.driver.set_script_timeout(120)
 
     for page in range(1, 101):
         sb.open(f"https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page={page}#qid~a46c0629-67e4-410c-9c35-0c80e98987d9")
