@@ -95,7 +95,7 @@ def verify_success(sb):
         sb.assert_element("//img[translate(@alt, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='logo rumah123']", timeout=45)
     sb.sleep(45)
 
-for page in range(1, 101):
+for page in range(1, 2):
     print(f"Scraping page {page}")
 
     url = f"https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page={page}#qid~a46c0629-67e4-410c-9c35-0c80e98987d9"
