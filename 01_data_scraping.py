@@ -67,8 +67,6 @@ with SB(uc_cdp=True, guest_mode=True) as sb:
     for page in range(1, 101):
         sb.open(f"https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page={page}#qid~a46c0629-67e4-410c-9c35-0c80e98987d9")
 
-        sb.driver.set_page_load_timeout(120) 
-
         if sb.is_element_visible('input[value*="Verify"]'):
             sb.click('input[value*="Verify"]')
             if page == 1:
