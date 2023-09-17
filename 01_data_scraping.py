@@ -23,7 +23,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 # from selenium_stealth import stealth
-from seleniumbase import SB
+# from seleniumbase import SB
 
 target_table = "real_estate.jakarta"
 target_table_2 = "real_estate.most_recent"
@@ -53,8 +53,8 @@ options.add_argument("--headless")
 options.add_argument("window-size=1920x1080")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
-options.add_experimental_option("excludeSwitches", ["enable-automation"])
-options.add_experimental_option("useAutomationExtension", False)
+# options.add_experimental_option("excludeSwitches", ["enable-automation"])
+# options.add_experimental_option("useAutomationExtension", False)
 
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 
@@ -96,29 +96,21 @@ for page in range(1, 101):
     wait = WebDriverWait(driver, 30)
     wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
 
-    def verify_success(sb):
-        sb.assert_element('img[alt="Icon for www.rumah123.com"]', timeout=8)
-        sb.sleep(4)
-
-    with SB(uc_cdp=True, guest_mode=True) as sb:
-        sb.open(url)
-        try:
-            verify_success(sb)
-        except Exception:
-            if sb.is_element_visible('input[value*="Verify"]'):
-                sb.click('input[value*="Verify"]')
-            elif sb.is_element_visible('iframe[title*="challenge"]'):
-                sb.switch_to_frame('iframe[title*="challenge"]')
-                sb.click("span.mark")
-            else:
-                raise Exception("Detected!")
-            try:
-                verify_success(sb)
-            except Exception:
-                raise Exception("Detected!")
+    # Check for security check
+    try:
+        security_check_header = driver.find_element(By.XPATH, "//h2[text()='Checking if the site connection is secure']")
+        if security_check_header:
+            checkbox = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="checkbox"]')))
+            checkbox.click()
+            print("Security check handled!")
+            # You might need to wait a few seconds after this for the page to refresh or proceed
+            time.sleep(5)
+    except NoSuchElementException:
+        pass  # The security check header was not found, so continue with the scraping
 
     # Search for the property elements
     property_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'card-featured__content-wrapper')]")
+    print(property_elements)
     driver.get_screenshot_as_file("page_screenshot.png")
     
     # Iterate through Each Property Element
