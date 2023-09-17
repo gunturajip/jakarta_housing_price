@@ -107,16 +107,10 @@ for page in range(1, 2):
         WebDriverWait(driver, 60).until(EC.frame_to_be_available_and_switch_to_it((By.CSS_SELECTOR,"iframe[title='Widget containing a Cloudflare security challenge']")))
         WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "label.ctp-checkbox-label"))).click()
         time.sleep(30)  # Wait a bit after clicking for things to settle or redirect
-        driver.switch_to.default_content()  # Switch back to the main content
+        driver.refresh()
+        time.sleep(10)
     except (NoSuchElementException, TimeoutException) as e:
         print("Exception occurred:", e)
-
-    # At this point, check if the page has loaded or not, and if required, refresh
-    current_url = driver.current_url
-    if current_url == url:  # This means we're still on the same page
-        driver.refresh()  # Refresh to potentially load the original content
-
-    time.sleep(10)  # Wait for any potential page load after refreshing
 
     # Search for the property elements
     property_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'card-featured__content-wrapper')]")
