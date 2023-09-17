@@ -64,6 +64,8 @@ dates = []
 conditions_met = False
 
 with SB(uc_cdp=True, guest_mode=True) as sb:
+    sb.set_script_timeout(120)
+
     for page in range(1, 101):
         sb.open(f"https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page={page}#qid~a46c0629-67e4-410c-9c35-0c80e98987d9")
 
@@ -79,8 +81,13 @@ with SB(uc_cdp=True, guest_mode=True) as sb:
         else:
             if page == 1:
                 sb.save_screenshot("page_screenshot_before.png")
-            
+
         property_elements = sb.find_elements(By.XPATH, "//div[contains(@class, 'card-featured__content-wrapper')]")
+
+        if not property_elements:
+            print("No property elements found for page", page)
+            continue
+
         print(property_elements)
 
         # Iterate through Each Property Element
