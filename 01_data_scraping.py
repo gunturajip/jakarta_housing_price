@@ -65,176 +65,178 @@ conditions_met = False
 
 with SB(uc_cdp=True, guest_mode=True) as sb:
     for page in range(1, 101):
-        sb.open(f"https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page={page}#qid~a46c0629-67e4-410c-9c35-0c80e98987d9")
+        try:
+            sb.open(f"https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page={page}#qid~a46c0629-67e4-410c-9c35-0c80e98987d9")
 
-        if sb.is_element_visible('input[value*="Verify"]'):
-            sb.click('input[value*="Verify"]')
-            if page == 1:
-                sb.save_screenshot("page_screenshot_before.png")
-        elif sb.is_element_visible('iframe[title*="challenge"]'):
-            sb.switch_to_frame('iframe[title*="challenge"]')
-            sb.click("span.mark")
-            if page == 1:
-                sb.save_screenshot("page_screenshot_before.png")
-        else:
-            if page == 1:
-                sb.save_screenshot("page_screenshot_before.png")
+            if sb.is_element_visible('input[value*="Verify"]'):
+                sb.click('input[value*="Verify"]')
+                if page == 1:
+                    sb.save_screenshot("page_screenshot_before.png")
+            elif sb.is_element_visible('iframe[title*="challenge"]'):
+                sb.switch_to_frame('iframe[title*="challenge"]')
+                sb.click("span.mark")
+                if page == 1:
+                    sb.save_screenshot("page_screenshot_before.png")
+            else:
+                if page == 1:
+                    sb.save_screenshot("page_screenshot_before.png")
 
-        property_elements = sb.find_elements(By.XPATH, "//div[contains(@class, 'card-featured__content-wrapper')]")
+            property_elements = sb.find_elements(By.XPATH, "//div[contains(@class, 'card-featured__content-wrapper')]")
+            print(property_elements)
 
-        if not property_elements:
-            print("No property elements found for page", page)
-            continue
-
-        # Iterate through Each Property Element
-        index = 0
-        for element in property_elements:
-            try:
-                # Title
+            # Iterate through Each Property Element
+            index = 0
+            for element in property_elements:
                 try:
-                    title_element = element.find_element(By.XPATH, ".//a[h2]")
-                    title = title_element.get_attribute("title")
-                except NoSuchElementException:
-                    title = float("nan")
+                    # Title
+                    try:
+                        title_element = element.find_element(By.XPATH, ".//a[h2]")
+                        title = title_element.get_attribute("title")
+                    except NoSuchElementException:
+                        title = float("nan")
 
-                # Link
-                try:
-                    link = title_element.get_attribute("href")
-                except NoSuchElementException:
-                    link = float("nan")
+                    # Link
+                    try:
+                        link = title_element.get_attribute("href")
+                    except NoSuchElementException:
+                        link = float("nan")
 
-                # Location
-                try:
-                    location = element.find_element(By.XPATH, ".//span[contains(text(), ',')]").text
-                except NoSuchElementException:
-                    location = float("nan")
+                    # Location
+                    try:
+                        location = element.find_element(By.XPATH, ".//span[contains(text(), ',')]").text
+                    except NoSuchElementException:
+                        location = float("nan")
 
-                # Price
-                try:
-                    price = element.find_element(By.CLASS_NAME, "card-featured__middle-section__price").text.split("\n")[0]
-                except NoSuchElementException:
-                    price = float("nan")
+                    # Price
+                    try:
+                        price = element.find_element(By.CLASS_NAME, "card-featured__middle-section__price").text.split("\n")[0]
+                    except NoSuchElementException:
+                        price = float("nan")
 
-                # Features
-                features_element = element.find_elements(By.XPATH, ".//div[@class='attribute-grid']/span[@class='attribute-text']")
+                    # Features
+                    features_element = element.find_elements(By.XPATH, ".//div[@class='attribute-grid']/span[@class='attribute-text']")
 
-                # Extracting the attributes (like bedroom, bathroom, garage) from features_element
-                attributes = [float("nan")] * 3
+                    # Extracting the attributes (like bedroom, bathroom, garage) from features_element
+                    attributes = [float("nan")] * 3
 
-                for idx, attr_elem in enumerate(features_element[:3]):
-                    text_content = attr_elem.text
-                    if text_content.isdigit():
-                        attributes[idx] = int(text_content)
+                    for idx, attr_elem in enumerate(features_element[:3]):
+                        text_content = attr_elem.text
+                        if text_content.isdigit():
+                            attributes[idx] = int(text_content)
 
-                bedroom, bathroom, garage = attributes
+                    bedroom, bathroom, garage = attributes
 
-                # Land Area
-                try:
-                    land_area_text = element.find_element(By.XPATH, ".//div[contains(text(), 'LT : ')]/span").text.strip()
-                    land_area = int(re.search(r"\d+", land_area_text).group()) if re.search(r"\d+", land_area_text) else float("nan")
-                except NoSuchElementException:
-                    land_area = float("nan")
+                    # Land Area
+                    try:
+                        land_area_text = element.find_element(By.XPATH, ".//div[contains(text(), 'LT : ')]/span").text.strip()
+                        land_area = int(re.search(r"\d+", land_area_text).group()) if re.search(r"\d+", land_area_text) else float("nan")
+                    except NoSuchElementException:
+                        land_area = float("nan")
 
-                # Building Area
-                try:
-                    building_area_text = element.find_element(By.XPATH, ".//div[contains(text(), 'LB : ')]/span").text.strip()
-                    building_area = int(re.search(r"\d+", building_area_text).group()) if re.search(r"\d+", building_area_text) else float("nan")
-                except NoSuchElementException:
-                    building_area = float("nan")
+                    # Building Area
+                    try:
+                        building_area_text = element.find_element(By.XPATH, ".//div[contains(text(), 'LB : ')]/span").text.strip()
+                        building_area = int(re.search(r"\d+", building_area_text).group()) if re.search(r"\d+", building_area_text) else float("nan")
+                    except NoSuchElementException:
+                        building_area = float("nan")
 
-                # Agent & Date
-                try:
-                    agent_date_element = element.find_element(By.CLASS_NAME, "ui-organisms-card-r123-basic__bottom-section__agent")
-                    
-                    time_info = agent_date_element.find_element(By.XPATH, ".//p[1]").text
-                    time_pattern = re.compile(r'(\d+\s\w+)')
-                    time_match = time_pattern.search(time_info)
+                    # Agent & Date
+                    try:
+                        agent_date_element = element.find_element(By.CLASS_NAME, "ui-organisms-card-r123-basic__bottom-section__agent")
+                        
+                        time_info = agent_date_element.find_element(By.XPATH, ".//p[1]").text
+                        time_pattern = re.compile(r'(\d+\s\w+)')
+                        time_match = time_pattern.search(time_info)
 
-                    if time_match:
-                        agent = time_match.group(1)
-                    else:
+                        if time_match:
+                            agent = time_match.group(1)
+                        else:
+                            agent = float("nan")
+
+                        date = agent_date_element.find_element(By.XPATH, ".//p[2]").text.strip()
+                    except NoSuchElementException:
                         agent = float("nan")
+                        date = float("nan")
 
-                    date = agent_date_element.find_element(By.XPATH, ".//p[2]").text.strip()
+                    print(f"House {index + 1} (Page {page}):")
+
+                    titles.append(title)
+                    print(f"Title: {title}")
+
+                    links.append(link)
+                    print(f"Link: {link}")
+
+                    locations.append(location)
+                    print(f"Location: {location}")
+
+                    prices.append(price)
+                    print(f"Price: {price}")
+
+                    bedrooms.append(bedroom)
+                    print(f"Bedroom: {bedroom}")
+
+                    bathrooms.append(bathroom)
+                    print(f"Bathroom: {bathroom}")
+
+                    garages.append(garage)
+                    print(f"Garage: {garage}")
+
+                    land_areas.append(land_area)
+                    print(f"Land Area: {land_area}")
+
+                    building_areas.append(building_area)
+                    print(f"Building Area: {building_area}")
+
+                    agents.append(date)
+                    print(f"Agent: {date}")
+
+                    def subtract_time_from_now(time_string):
+                        time_parts = time_string.split()
+
+                        number = int(time_parts[0])
+                        unit = time_parts[-1]
+
+                        now = datetime.now() + timedelta(hours=7)
+                        # now = datetime.now()
+
+                        if unit.lower() == "detik":
+                            return now - timedelta(seconds=number)
+                        elif unit.lower() == "menit":
+                            return now - timedelta(minutes=number)
+                        elif unit.lower() == "jam":
+                            return now - timedelta(hours=number)
+                        elif unit.lower() == "hari":
+                            return now - timedelta(days=number)
+                        else:
+                            raise ValueError("Unknown time unit!")
+                        
+                    agent = subtract_time_from_now(agent)
+                    dates.append(agent)
+                    print(f"Date: {agent}")
+
+                    print("--------------------")
+
+                    # Check If Conditions Are Met
+                    if title == query_most_recent["title"][0] and link == query_most_recent["link"][0] and \
+                            location == query_most_recent["address"][0] and date == query_most_recent["agent"][0]:
+                        print("CONDITIONS ARE MET")
+                        conditions_met = True
+                        break
+
+                    index += 1
+
                 except NoSuchElementException:
-                    agent = float("nan")
-                    date = float("nan")
+                    continue
 
-                print(f"House {index + 1} (Page {page}):")
+            if page == 1:
+                sb.save_screenshot("page_screenshot_after.png")
 
-                titles.append(title)
-                print(f"Title: {title}")
+            if conditions_met:
+                break
 
-                links.append(link)
-                print(f"Link: {link}")
-
-                locations.append(location)
-                print(f"Location: {location}")
-
-                prices.append(price)
-                print(f"Price: {price}")
-
-                bedrooms.append(bedroom)
-                print(f"Bedroom: {bedroom}")
-
-                bathrooms.append(bathroom)
-                print(f"Bathroom: {bathroom}")
-
-                garages.append(garage)
-                print(f"Garage: {garage}")
-
-                land_areas.append(land_area)
-                print(f"Land Area: {land_area}")
-
-                building_areas.append(building_area)
-                print(f"Building Area: {building_area}")
-
-                agents.append(date)
-                print(f"Agent: {date}")
-
-                def subtract_time_from_now(time_string):
-                    time_parts = time_string.split()
-
-                    number = int(time_parts[0])
-                    unit = time_parts[-1]
-
-                    now = datetime.now() + timedelta(hours=7)
-                    # now = datetime.now()
-
-                    if unit.lower() == "detik":
-                        return now - timedelta(seconds=number)
-                    elif unit.lower() == "menit":
-                        return now - timedelta(minutes=number)
-                    elif unit.lower() == "jam":
-                        return now - timedelta(hours=number)
-                    elif unit.lower() == "hari":
-                        return now - timedelta(days=number)
-                    else:
-                        raise ValueError("Unknown time unit!")
-                    
-                agent = subtract_time_from_now(agent)
-                dates.append(agent)
-                print(f"Date: {agent}")
-
-                print("--------------------")
-
-                # Check If Conditions Are Met
-                if title == query_most_recent["title"][0] and link == query_most_recent["link"][0] and \
-                        location == query_most_recent["address"][0] and date == query_most_recent["agent"][0]:
-                    print("CONDITIONS ARE MET")
-                    conditions_met = True
-                    break
-
-                index += 1
-
-            except NoSuchElementException:
-                continue
-
-        if page == 1:
-            sb.save_screenshot("page_screenshot_after.png")
-
-        if conditions_met:
-            break
+        except Exception as e:
+            print(f"Error on page {page}: {str(e)}")
+            continue
 
 df = pd.DataFrame({
     "Title": titles,
