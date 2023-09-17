@@ -101,38 +101,20 @@ for page in range(1, 2):
     print(f"Scraping page {page}")
 
     url = f"https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page={page}#qid~a46c0629-67e4-410c-9c35-0c80e98987d9"
-
-    with SB(uc_cdp=True, guest_mode=True) as sb:
-        sb.open(url)
-
-        try:
-            # Wait for either the logo or the security challenge to appear.
-            element_present = WebDriverWait(sb.driver, MAX_WAIT_TIME).until(
-                lambda x: x.find_element(By.CSS_SELECTOR, 'img[alt="Logo Rumah123"]') or
-                x.find_element(By.CSS_SELECTOR, 'input[value*="Verify"]') or
-                x.find_element(By.CSS_SELECTOR, 'iframe[title*="challenge"]')
-            )
-        except TimeoutException:
-            print("Timed out waiting for page to load")
-            continue
-
-        # Check conditions after waiting
-        try:
-            verify_success(sb)
-        except Exception:
-            if sb.is_element_visible('input[value*="Verify"]'):
-                sb.click('input[value*="Verify"]')
-            elif sb.is_element_visible('iframe[title*="challenge"]'):
-                sb.switch_to_frame('iframe[title*="challenge"]')
-                sb.click("span.mark")
-            else:
-                raise Exception("Verification Detected!")
-            try:
-                verify_success(sb)
-            except Exception:
-                raise Exception("Verification Detected after attempting!")
-
     driver.get(url)
+    time.sleep(5)
+
+    try:
+        # Attempt to switch to iframe and interact with the checkbox
+        WebDriverWait(driver, 20).until(EC.frame_to_be_available_and_switch_to_it((By.CSS_SELECTOR,"iframe[title='Widget containing a Cloudflare security challenge']")))
+        WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "label.ctp-checkbox-label"))).click()
+        
+        # After interacting with the checkbox, switch back to the main page content.
+        driver.switch_to.default_content()
+    except (NoSuchElementException, TimeoutException):
+        # If the iframe or checkbox can't be found, it means you already passed the challenge on a previous page.
+        # Therefore, just continue without doing anything.
+        pass
 
     # Search for the property elements
     property_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'card-featured__content-wrapper')]")
