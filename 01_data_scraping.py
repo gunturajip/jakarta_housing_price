@@ -95,17 +95,28 @@ def verify_success(sb):
         sb.assert_element("//img[translate(@alt, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='logo rumah123']", timeout=45)
     sb.sleep(45)
 
+MAX_WAIT_TIME = 120
+
 for page in range(1, 2):
     print(f"Scraping page {page}")
 
     url = f"https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page={page}#qid~a46c0629-67e4-410c-9c35-0c80e98987d9"
 
-    # Using WebDriverWait to wait for the page to load completely
-    wait = WebDriverWait(driver, 30)
-    wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
-
     with SB(uc_cdp=True, guest_mode=True) as sb:
         sb.open(url)
+
+        try:
+            # Wait for either the logo or the security challenge to appear.
+            element_present = WebDriverWait(sb.driver, MAX_WAIT_TIME).until(
+                lambda x: x.find_element(By.CSS_SELECTOR, 'img[alt="Logo Rumah123"]') or
+                x.find_element(By.CSS_SELECTOR, 'input[value*="Verify"]') or
+                x.find_element(By.CSS_SELECTOR, 'iframe[title*="challenge"]')
+            )
+        except TimeoutException:
+            print("Timed out waiting for page to load")
+            continue
+
+        # Check conditions after waiting
         try:
             verify_success(sb)
         except Exception:
