@@ -70,7 +70,7 @@ dates = []
 # Iterate through Each Page
 conditions_met = False
 
-with SB(uc_cdp=True, guest_mode=True, headless=True) as sb:
+with SB(uc_cdp=True, guest_mode=True) as sb:
     for page in range(1, 2):
         sb.open(f"https://www.rumah123.com/jual/dki-jakarta/rumah/?sort=posted-desc&page={page}#qid~a46c0629-67e4-410c-9c35-0c80e98987d9")
         # try:
