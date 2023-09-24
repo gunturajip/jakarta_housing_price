@@ -22,12 +22,18 @@ jobs:
 
       - name: Data scraping
         run: python 01_data_scraping.py
+        env:
+          FERNET_KEY: ${{ secrets.FERNET_KEY }}
 
       - name: Data cleaning
         run: python 02_data_cleaning.py
+        env:
+          FERNET_KEY: ${{ secrets.FERNET_KEY }}
 
       - name: Data storing
         run: python 03_data_storing.py
+        env:
+          FERNET_KEY: ${{ secrets.FERNET_KEY }}
 
       - name: Update README
         run: python 04_update_README.py
