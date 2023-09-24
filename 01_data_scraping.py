@@ -39,6 +39,8 @@ def decrypt_file(encrypted_file, key):
 
 # Get the FERNET_KEY from the environment
 fernet_key = os.environ.get("FERNET_KEY")
+print(fernet_key)
+
 decrypted_credentials = decrypt_file("encryption/encrypted_data.bin", fernet_key)
 
 credential = Credentials.from_service_account_info(decrypted_credentials)
